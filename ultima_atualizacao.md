@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M1-02 Identificar stakeholders | #14 | `docs/01-requisitos/stakeholders.md` |
-| ⏭️ **Próxima tarefa** | M1-02a Mapa de stakeholders | #15 | `img/stakeholders.png` |
+| ✅ **Última tarefa feita** | M1-02a Mapa de stakeholders (influência × interesse) | #15 | `img/stakeholders.png` + `src/stakeholders.mmd` |
+| ⏭️ **Próxima tarefa** | M1-02b Processo AS-IS e TO-BE em BPMN | #16 | `img/processo-as-is.png`, `img/processo-to-be.png` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -16,6 +16,7 @@
 | 2026-11-08 | M1-01 | #12 | Elaborar documento de visão | `docs/01-requisitos/visao.md` |
 | 2026-11-08 | M1-01a | #13 | Diagrama de contexto do sistema | `img/contexto.png` + `src/contexto.mmd` |
 | 2026-11-08 | M1-02 | #14 | Identificar stakeholders | `docs/01-requisitos/stakeholders.md` |
+| 2026-11-08 | M1-02a | #15 | Mapa de stakeholders (influência × interesse) | `img/stakeholders.png` + `src/stakeholders.mmd` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
