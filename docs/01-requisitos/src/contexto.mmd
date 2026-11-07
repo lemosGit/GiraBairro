@@ -1,0 +1,24 @@
+%% look: handDrawn
+%% M1-01a — Diagrama de contexto do sistema GiraBairro
+flowchart LR
+    PER01["👀 PER-01<br/>Visitante"]
+    PER02["🙋 PER-02<br/>Utilizador sem equipa"]
+    PER03["🧢 PER-03<br/>Responsável da equipa"]
+    PER04["📞 PER-04<br/>Responsável de contacto"]
+    PER05["🛡️ PER-05<br/>Administrador da plataforma"]
+
+    GB(("⚽ GiraBairro<br/>web responsiva"))
+
+    SMS[["📱 Gateway SMS / WhatsApp<br/>(a decidir — M3-08)"]]
+    IMG[["🖼️ Armazenamento de ficheiros<br/>(emblemas)"]]
+
+    PER01 -- "pesquisa equipas,<br/>vê perfis e rankings" --> GB
+    PER02 -- "cria conta,<br/>regista equipa" --> GB
+    PER03 -- "plantel, contactos, solicitações,<br/>comparência, resultados" --> GB
+    GB -- "notificações, estado dos jogos,<br/>divergências, ranking" --> PER03
+    GB -. "mostra os contactos;<br/>chamadas ocorrem fora do sistema" .-> PER04
+    PER05 -- "moderação, suspensões,<br/>análise de divergências" --> GB
+    GB -- "indicadores gerais,<br/>casos para análise" --> PER05
+
+    GB -- "código de recuperação,<br/>avisos (opcional)" --> SMS
+    GB -- "upload / leitura<br/>de emblemas" --> IMG
