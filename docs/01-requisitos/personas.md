@@ -109,3 +109,28 @@ Os códigos **PER-0X** são usados em todos os artefactos (RF, RNF, US, casos de
 ![Jornada do PER-03](img/jornada-PER-03.png)
 
 ![Jornada do PER-05](img/jornada-PER-05.png)
+
+### Jornada do PER-03 — acção, dor e oportunidade
+
+| Etapa | Acção | Ponto de dor | Oportunidade (requisito) |
+|-------|-------|--------------|--------------------------|
+| Entrar | Cria conta com telefone | Esquecer a palavra-passe | Recuperação simples (RF-01.07); registo curto |
+| Entrar | Regista a equipa | Duplicados / nome já usado | Aviso de duplicado (RF-02.09) |
+| Organizar | Cadastra jogadores | Muitos jogadores a digitar no telemóvel | Formulário rápido "adicionar outro"; validação de camisola (RF-03.06) |
+| Organizar | Define contactos | Medo de expor o telefone | Visibilidade configurável (decisão 3) |
+| Marcar | Pesquisa e envia solicitação | Não saber se a equipa é séria | Estrelas e indicadores de comparência no cartão (TEL-10) |
+| Marcar | Recebe proposta de alteração | Ida-e-volta de mensagens | Estado "Alteração proposta" com aceitar num toque (RF-05.06) |
+| Dia do jogo | Lembrete | Esquecer o jogo | Notificação antes do jogo (RF-10.04) |
+| Dia do jogo | Comparência e resultado | Rede fraca no campo; pressa | Poucos campos; funciona em rede lenta (RNF) |
+| Depois | Divergência | Discussão com a adversária | Correcção antes da confirmação; pedido de análise (RF-08.06/07) |
+| Depois | Ranking | Desconfiar do cálculo | Critérios públicos e explícitos (RF-09.11, RN-11) |
+
+### Jornada do PER-05 — acção, dor e oportunidade
+
+| Etapa | Acção | Ponto de dor | Oportunidade (requisito) |
+|-------|-------|--------------|--------------------------|
+| Monitorizar | Vê indicadores e casos | Casos misturados sem prioridade | Lista de casos por antiguidade/estado (TEL-22) |
+| Analisar | Compara submissões e histórico | Falta de contexto | Histórico de submissões com autor e hora (RF-08.08) |
+| Analisar | Contacta equipas | Contacto fora do sistema | Contactos da equipa visíveis no caso |
+| Decidir | Corrige com justificação | Medo de ser acusado de parcialidade | Auditoria obrigatória (RF-11.05) |
+| Moderar | Suspende abusos | Critério pouco claro | Regras de moderação documentadas (M1-11) |
