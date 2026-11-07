@@ -42,10 +42,14 @@ def render(mmd):
         # o SVG do Mermaid repete xmlns/width: limpar para ser XML válido
         head_end = svg.index(">")
         head = svg[:head_end]
-        head = re.sub(r'\s(xmlns|width|style)="[^"]*"', "", head)
+        head = re.sub(r'\s(xmlns|width|height|style)="[^"]*"', "", head)
         head += f' xmlns="http://www.w3.org/2000/svg" width="{w-20}" height="{h-20}"'
         svg = head + svg[head_end:]
         svg = re.sub(r"<br>", "<br/>", svg)
+        import xml.etree.ElementTree as ET
+        ET.fromstring(svg)  # falha cedo se o SVG não for XML válido
+        if "Syntax error" in svg:
+            raise SystemExit(f"erro de sintaxe Mermaid em {mmd}")
         open(base + ".svg", "w", encoding="utf-8").write(svg)
         # o Chrome headless devolve imagem em branco com janelas muito pequenas
         chrome(f"--screenshot={base}.png", f"--window-size={max(w, 500)},{max(h, 200)}",
