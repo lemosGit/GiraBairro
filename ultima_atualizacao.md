@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M1-02b Processo AS-IS e TO-BE | #16 | `processos.md` + `img/processo-as-is.png`, `img/processo-to-be.png` |
-| ⏭️ **Próxima tarefa** | M1-03 Definir personas (PER-01 a PER-05) | #17 | `docs/01-requisitos/personas.md` |
+| ✅ **Última tarefa feita** | M1-03 Definir personas (PER-01 a PER-05) | #17 | `docs/01-requisitos/personas.md` |
+| ⏭️ **Próxima tarefa** | M1-03a Jornada do utilizador por persona | #18 | `img/jornada-PER-03.png`, `img/jornada-PER-05.png` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -18,6 +18,7 @@
 | 2026-11-08 | M1-02 | #14 | Identificar stakeholders | `docs/01-requisitos/stakeholders.md` |
 | 2026-11-08 | M1-02a | #15 | Mapa de stakeholders (influência × interesse) | `img/stakeholders.png` + `src/stakeholders.mmd` |
 | 2026-11-08 | M1-02b | #16 | Processo AS-IS e TO-BE | `processos.md` + `img/processo-as-is.png`, `img/processo-to-be.png` |
+| 2026-11-08 | M1-03 | #17 | Definir personas (PER-01 a PER-05) | `docs/01-requisitos/personas.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
