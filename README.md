@@ -1,8 +1,24 @@
-
 # GiraBairro
 
-este é um projeto dedicado a footbal comunitario, em que o objetivo é reunir equipas de footbal do bairro, para ter beneficios de alguns servicos automaticos,
-onde a cada equipara pode marcar jogos, acompanhar os resultados, registrar o numero de jogo e os seus resultados, participar em campionatos, tendo organizacao de arbitro,
-controle de todas as atividades sobre esta competicao, ter registrado a cada jogador na equipa, e outros servicos, deste modo pretendo que me sugeres de forma os requisitos,
-funcionais que este aplicativo deve ter, uma vez que tendo a ideias, pretendo que tu traga - me todas as sugestoes para ter como requisitos, ainda sem filtar nenhum registrado
-apenas tras o que a plataforma deveria fazer.
+Plataforma para gestão de equipas de **futebol comunitário**: cada equipa regista o seu plantel e contactos, marca jogos com outras equipas, regista a comparência, confirma o resultado com a adversária e sobe num **ranking local** (bairro, município, província) que valoriza vitórias e seriedade.
+
+> **Princípio central do MVP:** registar de forma clara e auditável quem marcou o jogo, quem compareceu e qual resultado foi confirmado por ambas as equipas.
+
+## Documentação
+
+| Documento | Conteúdo |
+|-----------|----------|
+| [Especificação funcional do MVP](GiraBairro_MVP_Requisitos_Funcionais_Telas.md) | Requisitos RF-01…RF-11, regras RN-01…RN-13, telas TEL-01…TEL-22 |
+| [Roteiro de engenharia](roteiro-engenharia-de-sistemas.md) | Fases M0–M10, labels, convenções |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, issues, DoR/DoD |
+| [docs/](docs/) | Artefactos de cada fase |
+| [ultima_atualizacao.md](ultima_atualizacao.md) | Relatório da última actualização do repositório |
+
+## Acompanhamento
+
+- **Issues** organizadas por milestone (M0 Setup → M10 Deploy), com código `[Mx-NN]` no título.
+- **Milestones:** <https://github.com/lemosGit/GiraBairro/milestones>
+
+## Ideia original
+
+Reunir as equipas de futebol do bairro numa plataforma onde cada equipa pode marcar jogos, acompanhar resultados, registar jogadores e, numa fase posterior, participar em campeonatos com organização de arbitragem. O MVP foca-se na marcação de jogos, comparência, confirmação bilateral de resultados e ranking; campeonatos, arbitragem e restantes serviços ficam para versões seguintes (ver secção 8 da especificação).
