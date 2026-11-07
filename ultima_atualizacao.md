@@ -1,6 +1,6 @@
 # Última actualização — Configuração do repositório e backlog do MVP
 
-**Data:** 2026-11-07
+**Data:** 2026-11-08 (actualizado)
 **Repositório:** <https://github.com/lemosGit/GiraBairro>
 **Base:** [`roteiro-engenharia-de-sistemas.md`](roteiro-engenharia-de-sistemas.md) + [`GiraBairro_MVP_Requisitos_Funcionais_Telas.md`](GiraBairro_MVP_Requisitos_Funcionais_Telas.md)
 
@@ -20,7 +20,8 @@
 | Estrutura `docs/` | ✅ Pastas `00-gestao` … `06-entrega` com `img/` e `src/` |
 | `CONTRIBUTING.md` | ✅ Branches, commits, códigos, DoR/DoD |
 | Scripts reutilizáveis | ✅ `scripts/setup-github.sh`, `scripts/criar_issues.py`, `scripts/tarefas_mvp.py` |
-| Quadro GitHub Projects (M0-05) | ⏳ **Pendente** — o token do `gh` não tem o scope `project` (ver secção 6) |
+| Quadro GitHub Projects (M0-05) | ✅ [GiraBairro — MVP](https://github.com/users/lemosGit/projects/6) — colunas 📥 Backlog → 📌 Pronto → 🔨 Em curso → 👀 Em revisão → ✅ Feito, 123 issues, campos Início/Fim/Estimativa |
+| PR de configuração | ✅ #124 com merge em `master` |
 
 **Distribuição por prioridade:** 86 *must* · 23 *should* · 6 *could* · 8 *won't* (app nativa, M8/M10-05).
 
@@ -261,7 +262,7 @@ Título `[Mx-NN] Verbo + objecto` e corpo segundo o template de task:
 | #2 M0-02 | Branches + protecção | ✅ Fechada |
 | #3 M0-03 | Labels | ✅ Fechada |
 | #4 M0-04 | Milestones | ✅ Fechada (falta só definir datas-limite, opcional) |
-| #5 M0-05 | Quadro GitHub Projects | ⏳ Aberta — requer scope `project` |
+| #5 M0-05 | Quadro GitHub Projects | ✅ Fechada (PR deste quadro) — falta só configurar as vistas na interface |
 | #6 M0-06 | Templates de issue e PR | ✅ Fechada |
 | #7 M0-07 | Estrutura `docs/` | ✅ Fechada |
 | #8 M0-08 | `CONTRIBUTING.md` | ✅ Fechada |
@@ -269,23 +270,29 @@ Título `[Mx-NN] Verbo + objecto` e corpo segundo o template de task:
 | #10 M0-10 | Conectores MCP Excalidraw + draw.io | ⬜ Aberta — Excalidraw já disponível no Claude; falta draw.io (`claude mcp add --transport http drawio https://mcp.draw.io/mcp`) |
 | #11 M0-11 | draw.io Desktop | ⬜ Aberta |
 
-### Como concluir o quadro (M0-05)
+### Quadro GitHub Projects (M0-05)
 
-```bash
-gh auth refresh -s project          # autoriza o scope "project" no browser
-gh project create --owner lemosGit --title "GiraBairro — MVP"
-gh project link <NUM> --owner lemosGit --repo lemosGit/GiraBairro
-# adicionar todas as issues ao quadro
-gh issue list --repo lemosGit/GiraBairro --state all --limit 500 --json url --jq '.[].url' \
-  | xargs -I{} gh project item-add <NUM> --owner lemosGit --url {}
-```
-Depois, na interface web: colunas *Backlog / Pronto / Em curso / Em revisão / Feito*, vistas por milestone, roadmap, por responsável e "Bloqueados", e campos Início / Fim / Estimativa.
+**Link:** <https://github.com/users/lemosGit/projects/6> (ligado ao repositório, público)
+
+| Coluna (campo *Status*) | Significado | Issues iniciais |
+|--------|-------------|-----------------|
+| 📥 Backlog | Criada, ainda não está pronta para começar | todas as abertas |
+| 📌 Pronto | Cumpre a *Definition of Ready* | — |
+| 🔨 Em curso | Alguém está a trabalhar (tem responsável e branch) | — |
+| 👀 Em revisão | PR aberto | — |
+| ✅ Feito | Merge em `develop` + DoD cumprida | as fechadas do M0 |
+
+Campos personalizados: **Início** (data), **Fim** (data), **Estimativa** (número). A milestone e as labels de cada issue aparecem automaticamente.
+
+**Falta fazer à mão (a API do GitHub não permite criar vistas):** na interface do projecto, mudar o layout da vista para **Board** e criar as vistas *Por milestone* (agrupar por Milestone), *Roadmap* (layout Roadmap com Início/Fim), *Por responsável* (agrupar por Assignees) e *Bloqueados* (filtro `label:"estado: bloqueado"`).
+
+Recriar/sincronizar: `python3 scripts/criar_quadro.py` (idempotente; adiciona issues novas em Backlog e move as fechadas para Feito, sem mexer nas que a equipa já moveu).
 
 ---
 
 ## 7. Próximos passos recomendados
 
-1. Concluir M0-01 (licença), M0-05 (quadro) e M0-10/M0-11 (draw.io).
+1. Concluir M0-01 (licença), as vistas do quadro e M0-10/M0-11 (draw.io).
 2. Definir **datas-limite** das milestones (`gh api -X PATCH repos/lemosGit/GiraBairro/milestones/<n> -f due_on=...`).
 3. Arrancar o **M1** por M1-01 (visão) → M1-03 (personas) → **M1-11 (decisões pendentes)** e **M1-12 (ranking/estrelas)**, que bloqueiam a priorização e o módulo de ranking.
 4. Trabalhar sempre a partir de `develop`: `git switch develop && git pull && git switch -c docs/<nº>-<slug>`.
@@ -306,5 +313,6 @@ roteiro-engenharia-de-sistemas.md  (passa a estar versionado)
 scripts/setup-github.sh            (labels + milestones, idempotente)
 scripts/tarefas_mvp.py             (definição das 123 tarefas)
 scripts/criar_issues.py            (cria/actualiza as issues, idempotente)
+scripts/criar_quadro.py            (cria/sincroniza o quadro GitHub Projects)
 ultima_atualizacao.md              (este relatório)
 ```

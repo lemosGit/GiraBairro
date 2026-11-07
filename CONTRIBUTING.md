@@ -73,3 +73,4 @@ Colunas: 📥 Backlog → 📌 Pronto → 🔨 Em curso → 👀 Em revisão →
 
 - `scripts/setup-github.sh` — cria labels e milestones (idempotente).
 - `scripts/criar_issues.py` — cria/actualiza as issues do backlog definidas em `scripts/tarefas_mvp.py`.
+- `scripts/criar_quadro.py` — cria/sincroniza o quadro GitHub Projects (requer `gh auth refresh -s project`).
