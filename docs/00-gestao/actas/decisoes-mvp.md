@@ -6,7 +6,7 @@
 | Data | 2026-11-08 |
 | Decisor | Dono do produto (lemosGit) |
 | Origem | Especificação, secção 9 — "Decisões a definir antes do desenvolvimento" |
-| Estado | ✅ Decidido — a confirmar formalmente na validação (M1-10) |
+| Estado | ✅ Decidido e validado em M1-10 (2026-11-08) |
 
 ## Decisões
 

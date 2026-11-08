@@ -4,7 +4,7 @@
 |-------|-------|
 | Tasks | M1-02 (#14), M1-02a (#15) |
 | Versão | 1.0 — 2026-11-08 |
-| Estado | Rascunho para validação (M1-10) |
+| Estado | ✅ Validado (M1-10, 2026-11-08) |
 
 ---
 

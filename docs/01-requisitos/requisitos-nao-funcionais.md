@@ -4,7 +4,7 @@
 |-------|-------|
 | Task | M1-05 (#20) |
 | Versão | 1.0 — 2026-11-08 |
-| Estado | Rascunho para validação (M1-10) |
+| Estado | ✅ Validado (M1-10, 2026-11-08) |
 | Base | [personas.md](personas.md) (contexto de uso), [visao.md](visao.md) (restrições) |
 
 Cada RNF tem **código**, **persona** e uma **métrica verificável** (testada em M9-03). A prioridade MoSCoW é definida na M1-07.

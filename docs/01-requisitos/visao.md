@@ -4,7 +4,7 @@
 |-------|-------|
 | Task | M1-01 (#12) |
 | Versão | 1.0 — 2026-11-08 |
-| Estado | Rascunho para validação (M1-10) |
+| Estado | ✅ Validado (M1-10, 2026-11-08) |
 | Fonte | [`GiraBairro_MVP_Requisitos_Funcionais_Telas.md`](../../GiraBairro_MVP_Requisitos_Funcionais_Telas.md) |
 
 ---

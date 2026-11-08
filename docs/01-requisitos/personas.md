@@ -4,7 +4,7 @@
 |-------|-------|
 | Tasks | M1-03 (#17), M1-03a (#18) |
 | Versão | 1.0 — 2026-11-08 |
-| Estado | Rascunho para validação (M1-10) |
+| Estado | ✅ Validado (M1-10, 2026-11-08) |
 | Fonte | Especificação, secção 2 (Atores); [stakeholders.md](stakeholders.md) |
 
 Os códigos **PER-0X** são usados em todos os artefactos (RF, RNF, US, casos de uso, issues — label `persona: PER-0X`).

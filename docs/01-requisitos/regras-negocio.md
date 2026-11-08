@@ -43,7 +43,7 @@
 | RN-24 | Cancelar um jogo confirmado com **menos de 24 h** de antecedência conta como **falta de comparência** da equipa que cancela. | P-2 | RF-05.09, RF-07.06 |
 | RN-25 | Uma falta confirmada da adversária **não dá pontos** à equipa presente e **não lhe reduz** a taxa de comparência. | P-1 | RF-07.06, RF-09.03 |
 
-> RN-23 a RN-25 vêm dos **pressupostos** P-1 a P-3 da acta e devem ser confirmados na validação (M1-10).
+> RN-23 a RN-25 vêm dos pressupostos P-1 a P-3 da acta e foram **aprovados** na validação (M1-10).
 
 ## 3. RN-11 — Fórmula do ranking e das estrelas (M1-12)
 
