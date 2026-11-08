@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M2-09 Revisão cruzada da modelagem (consistente) | #37 | `docs/02-modelagem/revisao-modelagem.md` |
-| ⏭️ **Próxima tarefa** | M3-01 Definir stack e tecnologias | #38 | `docs/03-arquitetura/stack.md` |
+| ✅ **Última tarefa feita** | M3-01 Definir stack: Next.js + FastAPI + React Native + PostgreSQL | #38 | `docs/03-arquitetura/stack.md` |
+| ⏭️ **Próxima tarefa** | M3-02 Registar decisões em ADRs | #39 | `docs/03-arquitetura/adr/ADR-00X-*.md` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -45,6 +45,13 @@
 | 2026-11-08 | M2-07 | #35 | Diagramas de sequência (5 fluxos críticos) | `docs/02-modelagem/sequencia/README.md` + `img/sequencia-*.png` |
 | 2026-11-08 | M2-08 | #36 | Diagramas de estados (solicitação, jogo, comparência, resultado) | `docs/02-modelagem/estados/README.md` + `img/estados-*.png` |
 | 2026-11-08 | M2-09 | #37 | Revisão cruzada da modelagem (consistente) | `docs/02-modelagem/revisao-modelagem.md` |
+<!-- REGISTO-M2:FIM -->
+
+## 🗒️ Registo de progresso — M3 Arquitetura & Stack
+
+| Data | Código | Issue | Tarefa | Entregáveis |
+|------|--------|-------|--------|-------------|
+| 2026-11-08 | M3-01 | #38 | Definir stack: Next.js + FastAPI + React Native + PostgreSQL | `docs/03-arquitetura/stack.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
