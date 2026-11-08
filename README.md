@@ -18,6 +18,7 @@ Plataforma para gestão de equipas de **futebol comunitário**: cada equipa regi
 
 - **Issues** organizadas por milestone (M0 Setup → M10 Deploy), com código `[Mx-NN]` no título.
 - **Milestones:** <https://github.com/lemosGit/GiraBairro/milestones>
+- **Quadro:** <https://github.com/users/lemosGit/projects/6>
 
 ## Ideia original
 
