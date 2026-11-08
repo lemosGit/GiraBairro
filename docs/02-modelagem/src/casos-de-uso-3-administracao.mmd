@@ -1,0 +1,28 @@
+%% M2-01 — Casos de uso, pacote 3: Administração da plataforma
+flowchart LR
+    PER05["🧍 PER-05<br/>Administrador"]
+    subgraph GB["GiraBairro — Administração"]
+        direction TB
+        UC21(["UC21 Consultar indicadores gerais<br/>RF-11.01, RF-11.06"])
+        UC16(["UC16 Suspender / reactivar<br/>contas e equipas — RF-11.02"])
+        UC17(["UC17 Analisar caso e corrigir registo<br/>RF-11.03–05, RN-20, RN-21"])
+        UC22(["UC22 Marcar jogo como realizado<br/>RF-06.13"])
+        AUD(["Registar auditoria<br/>RF-11.05, RN-12"])
+    end
+    UC19(["UC19 Expirar prazos<br/>(pacote 2)"])
+    UC13(["UC13 Solicitar análise<br/>(pacote 2)"])
+    PER05 --- UC21
+    PER05 --- UC16
+    PER05 --- UC17
+    PER05 --- UC22
+    UC16 -. "«include»" .-> AUD
+    UC17 -. "«include»" .-> AUD
+    UC22 -. "«include»" .-> AUD
+    UC13 -. "abre caso" .-> UC17
+    UC19 -. "abre caso" .-> UC17
+    classDef actor fill:#fff,stroke:#333
+    classDef uc fill:#eef4ff,stroke:#1d76db
+    classDef ext fill:#f4f4f4,stroke:#999,stroke-dasharray:4
+    class PER05 actor
+    class UC21,UC16,UC17,UC22,AUD uc
+    class UC19,UC13 ext

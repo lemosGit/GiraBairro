@@ -1,0 +1,31 @@
+%% M2-01 — Casos de uso, pacote 1: Contas e equipa
+flowchart LR
+    PER01["🧍 PER-01<br/>Visitante"]
+    PER02["🧍 PER-02<br/>Utilizador sem equipa"]
+    PER03["🧍 PER-03<br/>Responsável da equipa"]
+    subgraph GB["GiraBairro — Contas e equipa"]
+        direction TB
+        UC01(["UC01 Criar conta<br/>RF-01.01–03"])
+        UC02(["UC02 Iniciar / terminar sessão<br/>RF-01.04–06"])
+        UC03(["UC03 Recuperar palavra-passe<br/>RF-01.07"])
+        UC04(["UC04 Registar equipa<br/>RF-02.01–06, RF-02.09"])
+        UC05(["UC05 Gerir jogadores<br/>RF-03"])
+        UC06(["UC06 Gerir contactos<br/>RF-04"])
+        UC07(["UC07 Pesquisar equipas e ver perfil<br/>RF-02.07–08, RF-05.01–02"])
+        UC14(["UC14 Consultar ranking<br/>RF-09"])
+    end
+    SMS["⚙️ Gateway SMS"]
+    PER01 --- UC01
+    PER01 --- UC07
+    PER01 --- UC14
+    PER02 --- UC02
+    PER02 --- UC03
+    PER02 --- UC04
+    PER03 --- UC05
+    PER03 --- UC06
+    UC03 --- SMS
+    PER02 -. "generalização: PER-03 é um<br/>PER-02 com equipa" .-> PER03
+    classDef actor fill:#fff,stroke:#333
+    classDef uc fill:#eef4ff,stroke:#1d76db
+    class PER01,PER02,PER03,SMS actor
+    class UC01,UC02,UC03,UC04,UC05,UC06,UC07,UC14 uc

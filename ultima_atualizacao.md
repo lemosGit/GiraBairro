@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M1-10 Validar requisitos (aprovados pelo dono do produto) | #28 | `docs/00-gestao/actas/validacao-requisitos-m1.md` |
-| ⏭️ **Próxima tarefa** | M2-01 Diagrama de casos de uso | #29 | `docs/02-modelagem/img/casos-de-uso.png` |
+| ✅ **Última tarefa feita** | M2-01 Diagrama de casos de uso (3 pacotes, 23 UC) | #29 | `docs/02-modelagem/casos-de-uso/README.md` + `img/casos-de-uso-*.png` |
+| ⏭️ **Próxima tarefa** | M2-02 Especificar os casos de uso principais | #30 | `docs/02-modelagem/casos-de-uso/especificacao-casos-uso.md` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -30,6 +30,13 @@
 | 2026-11-08 | M1-08 | #26 | User stories com critérios de aceitação (31 US) | `docs/01-requisitos/user-stories.md` |
 | 2026-11-08 | M1-09 | #27 | Matriz de rastreabilidade RF ↔ Persona ↔ US ↔ Tela | `docs/01-requisitos/rastreabilidade.md` |
 | 2026-11-08 | M1-10 | #28 | Validar requisitos (aprovados pelo dono do produto) | `docs/00-gestao/actas/validacao-requisitos-m1.md` |
+<!-- REGISTO-M1:FIM -->
+
+## 🗒️ Registo de progresso — M2 Análise & Modelagem
+
+| Data | Código | Issue | Tarefa | Entregáveis |
+|------|--------|-------|--------|-------------|
+| 2026-11-08 | M2-01 | #29 | Diagrama de casos de uso (3 pacotes, 23 UC) | `docs/02-modelagem/casos-de-uso/README.md` + `img/casos-de-uso-*.png` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
