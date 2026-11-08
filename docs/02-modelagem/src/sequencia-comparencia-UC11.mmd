@@ -1,0 +1,37 @@
+%% M2-07 — Sequência UC11 Registar comparência + UC11b + UC19 (prazo 48 h)
+sequenceDiagram
+    autonumber
+    actor A1 as PER-03 Equipa A
+    participant W as Frontend Web
+    participant API as API
+    participant DB as Base de Dados
+    participant N as Notificações
+    participant RK as Calculadora de Ranking
+    actor B1 as PER-03 Equipa B
+    A1->>W: "Compareceu" + "a adversária faltou" (TEL-16)
+    W->>API: PUT /jogos/{id}/comparencias/minha {compareceu:true, adversaria:"faltou", obs}
+    API->>API: RN-13 e RN-23 (hora passou, ≤ 7 dias)
+    alt fora da janela
+        API-->>W: 409 Janela de registo fechada
+    else dentro da janela
+        API->>DB: UPDATE comparencia(A) = compareceu_declarado
+        API->>DB: UPDATE comparencia(B) = falta_declarada, prazo_resposta_ate = agora + 48 h
+        API->>DB: INSERT registo_auditoria
+        API->>N: evento falta_declarada → B
+        API-->>W: 200
+    end
+    alt B concorda
+        B1->>API: POST /jogos/{id}/comparencias/minha/concordar
+        API->>DB: comparencia(B) = falta_confirmada · comparencia(A) = validada
+        API->>RK: recalcular(A, B)
+    else B contesta
+        B1->>API: POST /jogos/{id}/comparencias/minha/contestar {motivo}
+        API->>DB: ambas = em_analise · INSERT caso_analise(comparencia_contestada)
+        API->>N: evento para administradores
+    else B não responde em 48 h
+        Note over API,DB: tarefa agendada UC19 (a cada 15 min)
+        API->>DB: SELECT comparencia WHERE falta_declarada AND prazo_resposta_ate < agora
+        API->>DB: falta_confirmada + auditoria (autor = sistema)
+        API->>RK: recalcular(A, B)
+        API->>N: evento falta confirmada → A e B
+    end

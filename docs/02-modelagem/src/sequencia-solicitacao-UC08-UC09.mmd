@@ -1,0 +1,42 @@
+%% M2-07 — Sequência UC08 Solicitar jogo + UC09 Responder
+sequenceDiagram
+    autonumber
+    actor D as PER-03 Desafiante
+    participant W as Frontend Web
+    participant A as API
+    participant DB as Base de Dados
+    participant N as Serviço de Notificações
+    actor R as PER-03 Desafiado
+    D->>W: preenche data, hora, campo, obs. (TEL-12)
+    W->>A: POST /solicitacoes {equipaDesafiadaId, dataHora, local, obs}
+    A->>A: valida RN-13 (é responsável), RN-19 (adversária activa), data futura
+    alt inválido
+        A-->>W: 422 / 403
+    else válido
+        A->>DB: INSERT solicitacao_jogo (pendente) + registo_auditoria
+        A->>N: evento solicitacao_recebida
+        N->>DB: INSERT notificacao (responsável da desafiada)
+        A-->>W: 201 {solicitacao}
+    end
+    R->>W: abre "Recebidas" (TEL-13)
+    alt aceitar
+        W->>A: POST /solicitacoes/{id}/aceitar
+        A->>DB: BEGIN · UPDATE solicitacao = aceite
+        A->>DB: INSERT jogo (agendado, código) + 2 comparencia (nao_registada)
+        A->>DB: INSERT registo_auditoria · COMMIT
+        A->>N: evento solicitacao_aceite (ambas)
+        A-->>W: 200 {jogo}
+    else recusar
+        W->>A: POST /solicitacoes/{id}/recusar {motivo}
+        A->>DB: UPDATE solicitacao = recusada + auditoria
+        A->>N: evento solicitacao_recusada
+        A-->>W: 200
+    else propor alteração
+        W->>A: POST /solicitacoes/{id}/propostas {dataHora, local}
+        A->>DB: INSERT proposta_alteracao · UPDATE solicitacao = alteracao_proposta, aguarda_resposta_de = desafiante
+        A->>N: evento alteracao_proposta
+        A-->>W: 201
+        Note over D,R: o desafiante responde com o mesmo fluxo (aceitar / recusar / propor)
+    else solicitação já não está pendente
+        A-->>W: 409 Conflict
+    end

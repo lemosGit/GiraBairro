@@ -1,0 +1,36 @@
+%% M2-07 — Sequência UC13 Resolver divergência / UC17 Análise do administrador
+sequenceDiagram
+    autonumber
+    actor B1 as PER-03 Equipa B
+    participant API as API
+    participant DB as Base de Dados
+    participant N as Notificações
+    participant RK as Calculadora de Ranking
+    actor ADM as PER-05 Administrador
+    alt B corrige o resultado (antes de 72 h)
+        B1->>API: POST /jogos/{id}/resultados {golosA:2, golosB:1}
+        API->>DB: submissão B v2 (actual), v1 deixa de ser actual
+        API->>API: coincide com A?
+        API->>DB: confirmado → ver UC12
+    else B pede análise
+        B1->>API: POST /jogos/{id}/casos {tipo: divergencia_resultado, motivo}
+        API->>DB: jogo.estado_resultado = em_analise · INSERT caso_analise(aberto)
+        API->>N: novo caso → administradores
+        API-->>B1: 201
+    else passam 72 h (UC19)
+        API->>DB: divergente_desde < agora − 72 h → em_analise + caso_analise (automático)
+        API->>N: novo caso → administradores · aviso → A e B
+    end
+    ADM->>API: GET /admin/casos?estado=aberto
+    API-->>ADM: 200 [casos por antiguidade]
+    ADM->>API: GET /admin/casos/{id} (submissões, histórico, contactos)
+    ADM->>API: POST /admin/casos/{id}/resolver {decisao:{golosA:2,golosB:1}, justificacao}
+    alt sem justificação
+        API-->>ADM: 422 Justificação obrigatória (RF-11.04)
+    else válido
+        API->>DB: BEGIN · jogo confirmado com a decisão · caso = resolvido
+        API->>DB: INSERT registo_auditoria(decisao_admin, antes, depois, motivo) · COMMIT
+        API->>RK: recalcular(A, B)
+        API->>N: caso_resolvido → A e B
+        API-->>ADM: 200
+    end
