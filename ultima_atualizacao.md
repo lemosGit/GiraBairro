@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M1-12 Especificar a fórmula de ranking e estrelas | #23 | secção 3 de `regras-negocio.md` (fórmula, 5 exemplos, texto público) |
-| ⏭️ **Próxima tarefa** | M1-07 Priorizar requisitos (MoSCoW) | #24 | prioridades em `requisitos-funcionais.md` e `requisitos-nao-funcionais.md` |
+| ✅ **Última tarefa feita** | M1-07 Priorizar requisitos MoSCoW (RF: 83 Must, 10 Should, 2 Could; RNF: 21 Must, 12 Should) | #24 | `priorizacao-moscow.md` + coluna de prioridade em `requisitos-funcionais.md` |
+| ⏭️ **Próxima tarefa** | M1-07a Quadro MoSCoW visual | #25 | `img/moscow.png` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -25,6 +25,7 @@
 | 2026-11-08 | M1-11 | #22 | Fechar as decisões pendentes do MVP (10 decisões) | `docs/00-gestao/actas/decisoes-mvp.md` |
 | 2026-11-08 | M1-06 | #21 | Consolidar regras de negócio (RN-01 a RN-25) | `docs/01-requisitos/regras-negocio.md` |
 | 2026-11-08 | M1-12 | #23 | Especificar a fórmula de ranking e estrelas | secção 3 de `regras-negocio.md` (fórmula, 5 exemplos, texto público) |
+| 2026-11-08 | M1-07 | #24 | Priorizar requisitos MoSCoW (RF: 83 Must, 10 Should, 2 Could; RNF: 21 Must, 12 Should) | `priorizacao-moscow.md` + coluna de prioridade em `requisitos-funcionais.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
