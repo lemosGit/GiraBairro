@@ -193,7 +193,7 @@ task("M2-09", "Rever consistência da modelagem (MER ↔ classes ↔ dicionário
 # ---------------------------------------------------------------- M3
 task("M3-01", "Definir stack e tecnologias", "docs", "arquitetura", "must", "M", ["M1-07"],
      ent="`docs/03-arquitetura/stack.md` com justificação por RNF",
-     obj="Escolher front, back, BD e infra. Decidir também web responsiva/PWA vs app nativa (define se M8 entra no MVP).",
+     obj="Stack decidida pelo dono do produto: Next.js (web), FastAPI (API), React Native (app), PostgreSQL. Justificar por RNF e detalhar bibliotecas, alojamento e ferramentas.",
      ac=["Cada escolha justificada por RNF", "Decisão sobre mobile registada"])
 task("M3-02", "Registar decisões em ADRs", "docs", "arquitetura", "should", "S", ["M3-01"],
      ent="`docs/03-arquitetura/adr/ADR-001-*.md`", ac=["ADR por decisão: stack, mobile, autenticação, cálculo do ranking"])
@@ -340,18 +340,25 @@ task("M7-07", "Implementar painel administrativo (TEL-22)", "feature", "frontend
 task("M7-08", "Garantir responsividade e acessibilidade básica", "feature", "frontend", "should", "M", ["M7-06.18"],
      ent="Checklist", ac=["Mobile-first", "Contraste e tamanhos de toque adequados", "Bom desempenho em rede móvel lenta"])
 
-# ---------------------------------------------------------------- M8 (fora do MVP salvo decisão em M3-01)
-WONT = "A especificação (secção 8) coloca a app nativa fora do MVP se a 1.ª versão for web responsiva. Prioridade `wont` até à decisão em M3-01; se a decisão mudar, reclassificar."
-for code, title, t, s, deps in [
-    ("M8-01", "Inicializar projecto mobile", "chore", "S", ["M3-01"]),
-    ("M8-02", "Criar componentes base / tema mobile", "feature", "M", ["M4-04", "M8-01"]),
-    ("M8-03", "Implementar cliente da API + armazenamento seguro do token", "feature", "S", ["M3-05", "M8-01"]),
-    ("M8-04", "Implementar login e navegação mobile", "feature", "M", ["M8-03"]),
-    ("M8-05", "Implementar telas Must do responsável no mobile", "feature", "L", ["M8-04", "M6-09"]),
-    ("M8-06", "Implementar funcionalidades nativas (notificações push, offline)", "feature", "M", ["M8-05"]),
-    ("M8-07", "Gerar build de teste (APK)", "chore", "S", ["M8-05"]),
+# ---------------------------------------------------------------- M8 (no MVP — decisão M3-01: React Native)
+MOB = "App mobile em **React Native** (decisão do dono do produto em M3-01, ADR-003). Consome a mesma API FastAPI que a web; foco no PER-03 (responsável de equipa) e no dia do jogo."
+for code, title, t, p, s, deps, ac in [
+    ("M8-01", "Inicializar projecto mobile React Native (Expo)", "chore", "must", "S", ["M3-01"],
+     ["Projecto Expo + TypeScript a correr em emulador Android e dispositivo", "Estrutura de pastas definida em M3-04"]),
+    ("M8-02", "Criar componentes base / tema mobile", "feature", "must", "M", ["M4-04", "M8-01"],
+     ["Tema partilhado com o design system (cores, tipografia)", "Componentes: botão, input, cartão de jogo, badge de estado, estrelas"]),
+    ("M8-03", "Implementar cliente da API + armazenamento seguro do token", "feature", "must", "S", ["M3-05", "M8-01"],
+     ["Cliente gerado/tipado a partir do OpenAPI", "Token em SecureStore", "Renovação automática do token"]),
+    ("M8-04", "Implementar login e navegação mobile", "feature", "must", "M", ["M8-03"],
+     ["Registo, login, recuperação de palavra-passe", "Navegação por separadores: Início, Jogos, Ranking, Notificações, Perfil"]),
+    ("M8-05", "Implementar telas Must do responsável no mobile", "feature", "must", "L", ["M8-04", "M6-09"],
+     ["Dashboard, solicitações, agenda, detalhe do jogo, comparência, resultado, divergência, ranking", "Registo de comparência e resultado em ≤ 3 toques (RNF-012)"]),
+    ("M8-06", "Implementar funcionalidades nativas (notificações push, rede fraca)", "feature", "should", "M", ["M8-05"],
+     ["Notificações push (Expo Notifications) para os eventos de RF-10", "Fila local para submeter comparência/resultado quando a rede falha"]),
+    ("M8-07", "Gerar build de teste (APK)", "chore", "must", "S", ["M8-05"],
+     ["APK instalável distribuído aos testers do piloto (EAS Build)"]),
 ]:
-    task(code, title, t, "mobile", "wont", s, deps, obj=WONT)
+    task(code, title, t, "mobile", p, s, deps, obj=MOB, ac=ac, per=["PER-03"])
 
 # ---------------------------------------------------------------- M9
 task("M9-01", "Elaborar plano de testes a partir dos critérios de aceitação", "test", "qa", "must", "M", ["M1-08"],
@@ -371,7 +378,8 @@ task("M10-01", "Configurar pipeline CD (deploy automático para staging)", "chor
 task("M10-02", "Configurar ambiente de produção (servidor, domínio, HTTPS, BD)", "chore", "devops", "must", "M", ["M3-07"], ent="Produção pronta")
 task("M10-03", "Configurar backups e monitorização", "chore", "devops", "should", "S", ["M10-02"], ent="Rotina de backup + alertas")
 task("M10-04", "Criar release v1.0.0 (merge em master + tag)", "chore", "gestão", "must", "XS", ["M9-05"], ent="Release no GitHub")
-task("M10-05", "Publicar app mobile", "chore", "mobile", "wont", "S", ["M8-07", "M9-05"], ent="App publicada", obj=WONT)
+task("M10-05", "Publicar app mobile (Google Play)", "chore", "mobile", "should", "S", ["M8-07", "M9-05"], ent="App publicada", obj=MOB,
+     ac=["Ficha da loja em português", "Política de privacidade publicada (RNF-026)", "Versão 1.0.0 disponível"])
 task("M10-06", "Escrever manual do utilizador por persona", "docs", "gestão", "should", "M", ["M9-05"],
      ent="`docs/06-entrega/manual-utilizador.md`", ac=["Manual do responsável de equipa", "Manual do administrador da plataforma"])
 task("M10-07", "Escrever manual técnico / guia de instalação", "docs", "devops", "must", "M", ["M10-02"], ent="`docs/06-entrega/manual-tecnico.md`")

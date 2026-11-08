@@ -77,7 +77,7 @@ Criar conta → Registar equipa → Plantel + contactos → Pesquisar adversári
 
 ## 6. Fora do âmbito do MVP
 
-Campeonatos e torneios formais · inscrições em campeonatos · árbitros e escalas · pagamentos, mensalidades e bilheteira · transmissão em directo · chat interno completo · mercado/transferências de jogadores · descoberta avançada de talentos · IA e previsões · gestão médica · equipamentos e inventário · patrocínios e publicidade · gamificação avançada · integração com calendários externos · **app móvel nativa** (a 1.ª versão é web responsiva).
+Campeonatos e torneios formais · inscrições em campeonatos · árbitros e escalas · pagamentos, mensalidades e bilheteira · transmissão em directo · chat interno completo · mercado/transferências de jogadores · descoberta avançada de talentos · IA e previsões · gestão médica · equipamentos e inventário · patrocínios e publicidade · gamificação avançada · integração com calendários externos.
 
 > Estes pontos vêm da ideia original (README) e ficam como **visão de longo prazo**: o MVP cria a base (equipas, jogos, resultados confiáveis) sobre a qual campeonatos e arbitragem podem ser construídos.
 
@@ -88,7 +88,7 @@ Campeonatos e torneios formais · inscrições em campeonatos · árbitros e esc
 | Pressuposto | A maioria dos responsáveis usa **telemóvel Android** com dados móveis, por vezes lentos ou caros. |
 | Pressuposto | O **número de telefone** é o identificador natural das pessoas (mais do que o e-mail). |
 | Pressuposto | A divisão territorial usada é **Província › Município › Bairro** (Angola). |
-| Restrição | A 1.ª versão é **web responsiva**; app nativa só após decisão em M3-01. |
+| Decisão | Duas interfaces: **web responsiva** (Next.js) e **app Android** (React Native), sobre a mesma API (FastAPI) — decisão 11, M3-01. |
 | Restrição | Notificações do MVP são **internas**; SMS/WhatsApp dependem da decisão 10 (M1-11). |
 | Restrição | Dados pessoais (telefones, nomes de jogadores) exigem cuidado de visibilidade (decisões 3 e 9). |
 
