@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M3-02 Registar 8 ADRs (stack, mobile, auth, ranking, worker…) | #39 | `docs/03-arquitetura/adr/` |
-| ⏭️ **Próxima tarefa** | M3-03 Diagrama de arquitetura C4 | #40 | `img/arquitetura-c4-*.png` |
+| ✅ **Última tarefa feita** | M3-03 Diagramas C4 (contexto e contentores) + versão simplificada | #40 | `docs/03-arquitetura/arquitetura.md` |
+| ⏭️ **Próxima tarefa** | M3-04 Padrão arquitectural do backend | #41 | `docs/03-arquitetura/padrao-backend.md` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -53,6 +53,7 @@
 |------|--------|-------|--------|-------------|
 | 2026-11-08 | M3-01 | #38 | Definir stack: Next.js + FastAPI + React Native + PostgreSQL | `docs/03-arquitetura/stack.md` |
 | 2026-11-08 | M3-02 | #39 | Registar 8 ADRs (stack, mobile, auth, ranking, worker…) | `docs/03-arquitetura/adr/` |
+| 2026-11-08 | M3-03 | #40 | Diagramas C4 (contexto e contentores) + versão simplificada | `docs/03-arquitetura/arquitetura.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.

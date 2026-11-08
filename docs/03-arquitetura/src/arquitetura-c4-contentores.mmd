@@ -1,0 +1,32 @@
+%% M3-03 — C4 nível 2: contentores
+flowchart TB
+    r["<b>Responsável / Visitante / Admin</b><br/>[Pessoa]"]
+    subgraph GB["GiraBairro [Sistema]"]
+        direction TB
+        web["<b>Web</b><br/>[Next.js, TypeScript]<br/>SSR das páginas públicas,<br/>área autenticada, PWA, BFF de sessão"]
+        app["<b>App móvel</b><br/>[React Native, Expo]<br/>Dia do jogo: comparência,<br/>resultado, notificações push"]
+        api["<b>API</b><br/>[FastAPI, Python]<br/>Regras de negócio, autenticação,<br/>OpenAPI, ranking"]
+        worker["<b>Worker</b><br/>[Python, APScheduler]<br/>Prazos 48 h/72 h, lembretes"]
+        db[("<b>Base de dados</b><br/>[PostgreSQL]<br/>Equipas, jogos, submissões,<br/>auditoria, estatísticas")]
+    end
+    cdn["<b>Caddy / CDN</b><br/>[Proxy HTTPS]"]
+    sms["Fornecedor SMS<br/>[externo]"]
+    push["Expo Push / FCM<br/>[externo]"]
+    s3["Armazenamento S3<br/>[externo]"]
+    r -- "HTTPS" --> cdn
+    cdn -- "HTTPS" --> web
+    r -- "Usa no telemóvel" --> app
+    web -- "REST/JSON [HTTPS]" --> api
+    app -- "REST/JSON [HTTPS, JWT]" --> api
+    api -- "SQL [asyncpg]" --> db
+    worker -- "SQL [advisory lock]" --> db
+    api -- "OTP [HTTPS]" --> sms
+    api -- "Push [HTTPS]" --> push
+    worker -- "Lembretes [HTTPS]" --> push
+    api -- "Emblemas [S3 API]" --> s3
+    classDef person fill:#08427b,color:#fff,stroke:#052e56
+    classDef cont fill:#438dd5,color:#fff,stroke:#2e6295
+    classDef ext fill:#999999,color:#fff,stroke:#6b6b6b
+    class r person
+    class web,app,api,worker,db cont
+    class cdn,sms,push,s3 ext
