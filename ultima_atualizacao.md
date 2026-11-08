@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M2-01 Diagrama de casos de uso (3 pacotes, 23 UC) | #29 | `docs/02-modelagem/casos-de-uso/README.md` + `img/casos-de-uso-*.png` |
-| ⏭️ **Próxima tarefa** | M2-02 Especificar os casos de uso principais | #30 | `docs/02-modelagem/casos-de-uso/especificacao-casos-uso.md` |
+| ✅ **Última tarefa feita** | M2-02 Especificar 13 casos de uso principais | #30 | `docs/02-modelagem/casos-de-uso/especificacao-casos-uso.md` |
+| ⏭️ **Próxima tarefa** | M2-03 MER conceptual | #31 | `docs/02-modelagem/img/mer-conceptual.png` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -37,6 +37,7 @@
 | Data | Código | Issue | Tarefa | Entregáveis |
 |------|--------|-------|--------|-------------|
 | 2026-11-08 | M2-01 | #29 | Diagrama de casos de uso (3 pacotes, 23 UC) | `docs/02-modelagem/casos-de-uso/README.md` + `img/casos-de-uso-*.png` |
+| 2026-11-08 | M2-02 | #30 | Especificar 13 casos de uso principais | `docs/02-modelagem/casos-de-uso/especificacao-casos-uso.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
