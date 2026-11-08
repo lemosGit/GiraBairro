@@ -1,0 +1,15 @@
+%% M2-08 — Estados da comparência de UMA equipa num jogo (enum estado_comparencia)
+stateDiagram-v2
+    direction LR
+    [*] --> nao_registada
+    nao_registada --> compareceu_declarado : a equipa declara que compareceu
+    nao_registada --> falta_confirmada : a equipa declara que NÃO compareceu
+    nao_registada --> falta_declarada : a adversária declara que esta equipa faltou
+    compareceu_declarado --> validada : adversária também confirma a presença
+    compareceu_declarado --> em_analise : adversária declara falta e esta contesta
+    falta_declarada --> falta_confirmada : concorda ou 48 h sem resposta (RN-16)
+    falta_declarada --> em_analise : contesta
+    em_analise --> validada : admin decide presença
+    em_analise --> falta_confirmada : admin confirma falta
+    validada --> [*]
+    falta_confirmada --> [*]

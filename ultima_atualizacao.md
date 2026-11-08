@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M2-07 Diagramas de sequência (5 fluxos críticos) | #35 | `docs/02-modelagem/sequencia/README.md` + `img/sequencia-*.png` |
-| ⏭️ **Próxima tarefa** | M2-08 Diagramas de estados | #36 | `img/estados-*.png` |
+| ✅ **Última tarefa feita** | M2-08 Diagramas de estados (solicitação, jogo, comparência, resultado) | #36 | `docs/02-modelagem/estados/README.md` + `img/estados-*.png` |
+| ⏭️ **Próxima tarefa** | M2-09 Revisão cruzada da modelagem | #37 | checklist `docs/02-modelagem/revisao-modelagem.md` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -43,6 +43,7 @@
 | 2026-11-08 | M2-05 | #33 | Dicionário de dados (18 tabelas, 14 enums, restrições) | `docs/02-modelagem/dicionario-dados.md` |
 | 2026-11-08 | M2-06 | #34 | Diagrama de classes (16 classes, RN nos métodos) | `docs/02-modelagem/diagrama-classes/README.md` + `img/diagrama-classes.png` |
 | 2026-11-08 | M2-07 | #35 | Diagramas de sequência (5 fluxos críticos) | `docs/02-modelagem/sequencia/README.md` + `img/sequencia-*.png` |
+| 2026-11-08 | M2-08 | #36 | Diagramas de estados (solicitação, jogo, comparência, resultado) | `docs/02-modelagem/estados/README.md` + `img/estados-*.png` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
