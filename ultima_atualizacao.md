@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M2-05 Dicionário de dados (18 tabelas, 14 enums, restrições) | #33 | `docs/02-modelagem/dicionario-dados.md` |
-| ⏭️ **Próxima tarefa** | M2-06 Diagrama de classes | #34 | `img/diagrama-classes.png` |
+| ✅ **Última tarefa feita** | M2-06 Diagrama de classes (16 classes, RN nos métodos) | #34 | `docs/02-modelagem/diagrama-classes/README.md` + `img/diagrama-classes.png` |
+| ⏭️ **Próxima tarefa** | M2-07 Diagramas de sequência dos UC críticos | #35 | `img/sequencia-*.png` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -41,6 +41,7 @@
 | 2026-11-08 | M2-03 | #31 | MER conceptual (17 entidades) | `docs/02-modelagem/mer/README.md` + `img/mer-conceptual.png` |
 | 2026-11-08 | M2-04 | #32 | Modelo lógico/físico (18 tabelas, 152 atributos) | `img/mer-logico.png` + `scripts/modelo_dados.py` |
 | 2026-11-08 | M2-05 | #33 | Dicionário de dados (18 tabelas, 14 enums, restrições) | `docs/02-modelagem/dicionario-dados.md` |
+| 2026-11-08 | M2-06 | #34 | Diagrama de classes (16 classes, RN nos métodos) | `docs/02-modelagem/diagrama-classes/README.md` + `img/diagrama-classes.png` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
