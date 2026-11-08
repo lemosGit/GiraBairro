@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M3-05 Contrato da API OpenAPI (60 operações, validado) | #42 | `docs/03-arquitetura/openapi.yaml` + `api-contrato.md` |
-| ⏭️ **Próxima tarefa** | M3-06 Estratégia de segurança | #43 | `docs/03-arquitetura/seguranca.md` |
+| ✅ **Última tarefa feita** | M3-06 Estratégia de segurança (auth, RBAC, dados pessoais, OWASP) | #43 | `docs/03-arquitetura/seguranca.md` + `img/auth-flow.png` |
+| ⏭️ **Próxima tarefa** | M3-07 Definir ambientes e variáveis | #44 | `docs/03-arquitetura/ambientes.md` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -56,6 +56,7 @@
 | 2026-11-08 | M3-03 | #40 | Diagramas C4 (contexto e contentores) + versão simplificada | `docs/03-arquitetura/arquitetura.md` |
 | 2026-11-08 | M3-04 | #41 | Padrão do backend: monólito modular em camadas | `docs/03-arquitetura/padrao-backend.md` |
 | 2026-11-08 | M3-05 | #42 | Contrato da API OpenAPI (60 operações, validado) | `docs/03-arquitetura/openapi.yaml` + `api-contrato.md` |
+| 2026-11-08 | M3-06 | #43 | Estratégia de segurança (auth, RBAC, dados pessoais, OWASP) | `docs/03-arquitetura/seguranca.md` + `img/auth-flow.png` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
