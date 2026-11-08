@@ -1,0 +1,15 @@
+%% M2-08 — Estados da solicitação de jogo (enum estado_solicitacao)
+stateDiagram-v2
+    direction LR
+    [*] --> pendente : desafiante envia (UC08)
+    pendente --> aceite : destinatária aceita (RN-05)
+    pendente --> recusada : destinatária recusa
+    pendente --> alteracao_proposta : destinatária propõe data/hora/local
+    alteracao_proposta --> alteracao_proposta : nova contra-proposta (inverte quem responde)
+    alteracao_proposta --> aceite : quem recebe a proposta aceita
+    alteracao_proposta --> recusada : quem recebe a proposta recusa
+    pendente --> cancelada : desafiante cancela
+    alteracao_proposta --> cancelada : qualquer equipa cancela
+    aceite --> [*] : cria Jogo (agendado)
+    recusada --> [*]
+    cancelada --> [*]

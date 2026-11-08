@@ -1,0 +1,162 @@
+%% M2-06 — Diagrama de classes do domínio GiraBairro
+classDiagram
+    direction LR
+    class Utilizador {
+        -UUID id
+        -String nomeCompleto
+        -String telefone
+        -String palavraPasseHash
+        -PapelUtilizador papel
+        -EstadoConta estado
+        +autenticar(palavraPasse) bool
+        +alterarPalavraPasse(actual, nova)
+        +suspender(motivo)
+        +eAdmin() bool
+    }
+    class Equipa {
+        -UUID id
+        -String nome
+        -Bairro bairro
+        -String emblemaUrl
+        -VisibilidadePlantel visibilidadePlantel
+        -EstadoConta estado
+        +adicionarJogador(nome, numero, posicao) Jogador
+        +desactivarJogador(jogador)
+        +definirContactoPrincipal(contacto)
+        +podeSerDesafiada() bool
+        +eGeridaPor(utilizador) bool
+    }
+    class Jogador {
+        -UUID id
+        -String nome
+        -int numeroCamisola
+        -Posicao posicao
+        -bool activo
+    }
+    class ContactoEquipa {
+        -String nome
+        -String telefone
+        -String funcao
+        -bool principal
+        +telefoneVisivelPara(utilizador) bool
+    }
+    class Bairro {
+        -int id
+        -String nome
+        +municipio() Municipio
+        +provincia() Provincia
+    }
+    class SolicitacaoJogo {
+        -UUID id
+        -DateTime dataHora
+        -String local
+        -EstadoSolicitacao estado
+        -Equipa aguardaRespostaDe
+        +aceitar(por) Jogo
+        +recusar(por, motivo)
+        +proporAlteracao(por, dataHora, local) PropostaAlteracao
+        +cancelar(por, motivo)
+    }
+    class PropostaAlteracao {
+        -DateTime dataHora
+        -String local
+        -Equipa propostaPor
+    }
+    class Jogo {
+        -UUID id
+        -String codigo
+        -DateTime dataHora
+        -String local
+        -EstadoJogo estado
+        -EstadoResultado estadoResultado
+        -int golosA
+        -int golosB
+        +janelaRegistoAberta(agora) bool
+        +cancelar(equipa, motivo, agora)
+        +registarComparencia(equipa, declaracao)
+        +submeterResultado(equipa, golosA, golosB) SubmissaoResultado
+        +avaliarResultado()
+        +confirmarResultado(golosA, golosB)
+        +vencedor() Equipa
+    }
+    class Comparencia {
+        -EstadoComparencia estado
+        -DeclaracaoAdversaria declarouAdversaria
+        -DateTime prazoRespostaAte
+        +declarar(compareceu, adversaria)
+        +concordarComFalta()
+        +contestarFalta(motivo) CasoAnalise
+        +expirarPrazo(agora)
+    }
+    class SubmissaoResultado {
+        -int golosA
+        -int golosB
+        -int versao
+        -bool actual
+        +coincideCom(outra) bool
+    }
+    class CasoAnalise {
+        -TipoCaso tipo
+        -EstadoCaso estado
+        -String justificacao
+        +resolver(admin, decisao, justificacao)
+        +rejeitar(admin, justificacao)
+    }
+    class Notificacao {
+        -TipoNotificacao tipo
+        -String mensagem
+        -DateTime lidaEm
+        +marcarComoLida()
+    }
+    class RegistoAuditoria {
+        <<imutável>>
+        -String entidade
+        -UUID entidadeId
+        -AccaoAuditoria accao
+        -Json valorAnterior
+        -Json valorNovo
+        -String motivo
+    }
+    class EstatisticaEquipa {
+        -int jogosConfirmados
+        -int vitorias
+        -int empates
+        -int derrotas
+        -int pontos
+        -int jogosAgendados
+        -int comparencias
+        -decimal indice
+        -int estrelas
+        +aproveitamento() decimal
+        +taxaComparencia() decimal
+    }
+    class CalculadoraRanking {
+        <<serviço>>
+        +recalcular(equipa) EstatisticaEquipa
+        +estrelas(indice, jogos) int
+        +ordenar(equipas, ambito) List~Equipa~
+    }
+    class ServicoNotificacoes {
+        <<serviço>>
+        +notificar(evento, destinatarios)
+        +enviarLembretes(agora)
+    }
+
+    Utilizador "1" -- "0..1" Equipa : responsável (RN-18)
+    Equipa "1" *-- "0..*" Jogador : plantel
+    Equipa "1" *-- "1..*" ContactoEquipa : contactos
+    Equipa "*" --> "1" Bairro : localização
+    Equipa "1" -- "*" SolicitacaoJogo : desafiante / desafiada
+    SolicitacaoJogo "1" *-- "0..*" PropostaAlteracao
+    SolicitacaoJogo "1" --> "0..1" Jogo : origina (RN-05)
+    Jogo "*" --> "2" Equipa : A e B
+    Jogo "1" *-- "2" Comparencia : uma por equipa (RN-06)
+    Jogo "1" *-- "0..*" SubmissaoResultado : versões (RF-08.08)
+    Jogo "1" -- "0..*" CasoAnalise
+    Utilizador "1" -- "0..*" Notificacao
+    Equipa "1" -- "1" EstatisticaEquipa
+    CalculadoraRanking ..> EstatisticaEquipa : actualiza
+    CalculadoraRanking ..> Jogo : lê confirmados (RN-10)
+    Jogo ..> RegistoAuditoria : regista (RN-12)
+    CasoAnalise ..> RegistoAuditoria : regista decisão
+    Jogo ..> ServicoNotificacoes : eventos

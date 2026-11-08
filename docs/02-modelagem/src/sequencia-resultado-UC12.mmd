@@ -1,0 +1,34 @@
+%% M2-07 — Sequência UC12 Submeter resultado (confirmação bilateral, RN-08)
+sequenceDiagram
+    autonumber
+    actor A1 as PER-03 Equipa A
+    actor B1 as PER-03 Equipa B
+    participant API as API
+    participant DB as Base de Dados
+    participant N as Notificações
+    participant RK as Calculadora de Ranking
+    A1->>API: POST /jogos/{id}/resultados {golosA:2, golosB:1}
+    API->>API: RN-13, RN-23, sem falta confirmada, golos ≥ 0
+    API->>DB: BEGIN · SELECT jogo FOR UPDATE (RNF-035)
+    API->>DB: INSERT submissao_resultado(A, v1, actual)
+    API->>DB: SELECT submissão actual de B
+    DB-->>API: nenhuma
+    API->>DB: UPDATE jogo.estado_resultado = aguarda_adversaria · COMMIT
+    API->>N: evento resultado_submetido → B
+    API-->>A1: 201 {estado: aguarda_adversaria}
+    B1->>API: POST /jogos/{id}/resultados {golosA:2, golosB:1}
+    API->>DB: BEGIN · SELECT jogo FOR UPDATE
+    API->>DB: INSERT submissao_resultado(B, v1, actual)
+    API->>API: coincideCom(submissão A)?
+    alt iguais
+        API->>DB: UPDATE jogo golos_a=2, golos_b=1, estado_resultado=confirmado, estado=concluido
+        API->>DB: INSERT registo_auditoria · COMMIT
+        API->>RK: recalcular(A, B)
+        RK->>DB: UPSERT estatistica_equipa (A, B)
+        API->>N: resultado_confirmado → A e B
+        API-->>B1: 201 {estado: confirmado}
+    else diferentes
+        API->>DB: UPDATE jogo.estado_resultado=divergente, divergente_desde=agora · COMMIT
+        API->>N: resultado_divergente → A e B
+        API-->>B1: 201 {estado: divergente}
+    end

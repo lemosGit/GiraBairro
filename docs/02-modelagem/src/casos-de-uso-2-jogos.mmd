@@ -1,0 +1,38 @@
+%% M2-01 — Casos de uso, pacote 2: Jogos, comparência e resultados (PER-03 desafiante e desafiado)
+flowchart LR
+    PER03["🧍 PER-03<br/>Responsável da equipa"]
+    subgraph GB["GiraBairro — Jogos"]
+        direction TB
+        UC08(["UC08 Solicitar jogo<br/>RF-05.03–04"])
+        UC07(["UC07 Pesquisar equipas<br/>(pacote 1)"])
+        UC09(["UC09 Responder a solicitação<br/>aceitar / recusar / propor<br/>RF-05.05–08"])
+        UC10(["UC10 Cancelar solicitação ou jogo<br/>RF-05.09"])
+        UC16b(["UC20 Consultar agenda e detalhe<br/>RF-05.10, RF-06.01–02, RF-06.12"])
+        UC11(["UC11 Registar comparência<br/>RF-06.03–05, RF-07"])
+        UC11b(["UC11b Responder a falta declarada<br/>RN-16"])
+        UC12(["UC12 Submeter resultado<br/>RF-06.06–11"])
+        UC13(["UC13 Resolver divergência /<br/>solicitar análise — RF-08"])
+        UC15(["UC15 Consultar notificações<br/>RF-10.07"])
+    end
+    REL["⏰ Relógio do sistema"]
+    subgraph AUT["Automático"]
+        direction TB
+        UC18(["UC18 Notificar e lembrar<br/>RF-10.01–06"])
+        UC19(["UC19 Expirar prazos<br/>48 h / 72 h — RN-16, RN-20"])
+    end
+    PER03 --- UC08
+    PER03 --- UC09
+    PER03 --- UC10
+    PER03 --- UC16b
+    PER03 --- UC11
+    PER03 --- UC12
+    PER03 --- UC15
+    UC08 -. "«include»" .-> UC07
+    UC11b -. "«extend»" .-> UC11
+    UC13 -. "«extend»" .-> UC12
+    REL --- UC18
+    REL --- UC19
+    classDef actor fill:#fff,stroke:#333
+    classDef uc fill:#eef4ff,stroke:#1d76db
+    class PER03,REL actor
+    class UC07,UC08,UC09,UC10,UC16b,UC11,UC11b,UC12,UC13,UC15,UC18,UC19 uc

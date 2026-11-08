@@ -1,0 +1,223 @@
+%% M2-04 — Modelo lógico do GiraBairro (gerado por scripts/modelo_dados.py — não editar à mão)
+erDiagram
+    provincia {
+        SMALLINT id PK
+        VARCHAR nome UK
+    }
+    municipio {
+        INTEGER id PK
+        SMALLINT provincia_id FK
+        VARCHAR nome UK
+    }
+    bairro {
+        INTEGER id PK
+        INTEGER municipio_id FK
+        VARCHAR nome UK
+    }
+    utilizador {
+        UUID id PK
+        VARCHAR nome_completo
+        VARCHAR telefone UK
+        VARCHAR palavra_passe_hash
+        enum_papel_utilizador papel
+        enum_estado_conta estado
+        TIMESTAMPTZ termos_aceites_em
+        SMALLINT tentativas_falhadas
+        TIMESTAMPTZ bloqueado_ate
+        TIMESTAMPTZ criado_em
+        TIMESTAMPTZ actualizado_em
+    }
+    codigo_recuperacao {
+        UUID id PK
+        UUID utilizador_id FK
+        VARCHAR codigo_hash
+        TIMESTAMPTZ expira_em
+        SMALLINT tentativas
+        TIMESTAMPTZ usado_em
+        TIMESTAMPTZ criado_em
+    }
+    equipa {
+        UUID id PK
+        VARCHAR nome
+        VARCHAR nome_normalizado UK
+        INTEGER bairro_id FK
+        VARCHAR emblema_url
+        TEXT descricao
+        enum_visibilidade_plantel visibilidade_plantel
+        enum_estado_conta estado
+        TIMESTAMPTZ criado_em
+        TIMESTAMPTZ actualizado_em
+    }
+    membro_equipa {
+        UUID utilizador_id PK,FK
+        UUID equipa_id FK
+        enum_papel_membro papel
+        TIMESTAMPTZ criado_em
+    }
+    jogador {
+        UUID id PK
+        UUID equipa_id FK
+        VARCHAR nome
+        SMALLINT numero_camisola
+        enum_posicao_jogador posicao
+        BOOLEAN activo
+        TIMESTAMPTZ criado_em
+    }
+    contacto_equipa {
+        UUID id PK
+        UUID equipa_id FK
+        VARCHAR nome
+        VARCHAR telefone
+        VARCHAR funcao
+        BOOLEAN principal
+    }
+    solicitacao_jogo {
+        UUID id PK
+        UUID equipa_desafiante_id FK
+        UUID equipa_desafiada_id FK
+        TIMESTAMPTZ data_hora
+        VARCHAR local
+        UUID equipa_mandante_id FK
+        TEXT observacao
+        enum_estado_solicitacao estado
+        UUID aguarda_resposta_de_id FK
+        TEXT motivo
+        UUID criado_por FK
+        TIMESTAMPTZ criado_em
+        TIMESTAMPTZ actualizado_em
+    }
+    proposta_alteracao {
+        UUID id PK
+        UUID solicitacao_id FK
+        UUID proposta_por_equipa_id FK
+        TIMESTAMPTZ data_hora
+        VARCHAR local
+        TEXT observacao
+        TIMESTAMPTZ criado_em
+    }
+    jogo {
+        UUID id PK
+        VARCHAR codigo UK
+        UUID solicitacao_id FK,UK
+        UUID equipa_a_id FK
+        UUID equipa_b_id FK
+        TIMESTAMPTZ data_hora
+        VARCHAR local
+        enum_estado_jogo estado
+        enum_estado_resultado estado_resultado
+        SMALLINT golos_a
+        SMALLINT golos_b
+        TIMESTAMPTZ confirmado_em
+        TIMESTAMPTZ divergente_desde
+        BOOLEAN realizado_admin
+        TIMESTAMPTZ lembrete_enviado_em
+        UUID cancelado_por_equipa_id FK
+        TEXT motivo_cancelamento
+        TIMESTAMPTZ cancelado_em
+        TIMESTAMPTZ criado_em
+    }
+    comparencia {
+        UUID id PK
+        UUID jogo_id FK,UK
+        UUID equipa_id FK
+        enum_estado_comparencia estado
+        enum_declaracao_adversaria declarou_adversaria
+        TEXT observacao
+        UUID declarado_por FK
+        TIMESTAMPTZ declarado_em
+        TIMESTAMPTZ prazo_resposta_ate
+    }
+    submissao_resultado {
+        UUID id PK
+        UUID jogo_id FK
+        UUID equipa_id FK
+        SMALLINT golos_a
+        SMALLINT golos_b
+        SMALLINT versao UK
+        BOOLEAN actual
+        UUID submetido_por FK
+        TIMESTAMPTZ criado_em
+    }
+    caso_analise {
+        UUID id PK
+        UUID jogo_id FK
+        enum_tipo_caso tipo
+        enum_estado_caso estado
+        UUID aberto_por_equipa_id FK
+        TEXT motivo
+        JSONB decisao
+        TEXT justificacao
+        UUID resolvido_por FK
+        TIMESTAMPTZ criado_em
+        TIMESTAMPTZ resolvido_em
+    }
+    notificacao {
+        UUID id PK
+        UUID utilizador_id FK
+        enum_tipo_notificacao tipo
+        VARCHAR mensagem
+        UUID jogo_id FK
+        UUID solicitacao_id FK
+        TIMESTAMPTZ lida_em
+        TIMESTAMPTZ criado_em
+    }
+    registo_auditoria {
+        BIGINT id PK
+        VARCHAR entidade
+        UUID entidade_id
+        enum_accao_auditoria accao
+        JSONB valor_anterior
+        JSONB valor_novo
+        TEXT motivo
+        UUID utilizador_id FK
+        TIMESTAMPTZ criado_em
+    }
+    estatistica_equipa {
+        UUID equipa_id PK,FK
+        INTEGER jogos_confirmados
+        INTEGER vitorias
+        INTEGER empates
+        INTEGER derrotas
+        INTEGER pontos
+        INTEGER golos_marcados
+        INTEGER golos_sofridos
+        INTEGER jogos_agendados
+        INTEGER comparencias
+        INTEGER faltas_confirmadas
+        NUMERIC indice
+        SMALLINT estrelas
+        TIMESTAMPTZ actualizado_em
+    }
+    provincia ||--o{ municipio : "provincia_id"
+    municipio ||--o{ bairro : "municipio_id"
+    utilizador ||--o{ codigo_recuperacao : "utilizador_id"
+    bairro ||--o{ equipa : "bairro_id"
+    utilizador ||--o| membro_equipa : "utilizador_id"
+    equipa ||--o{ membro_equipa : "equipa_id"
+    equipa ||--o{ jogador : "equipa_id"
+    equipa ||--o{ contacto_equipa : "equipa_id"
+    equipa ||--o{ solicitacao_jogo : "equipa_desafiante_id"
+    equipa ||--o{ solicitacao_jogo : "equipa_desafiada_id"
+    equipa |o--o{ solicitacao_jogo : "equipa_mandante_id"
+    equipa |o--o{ solicitacao_jogo : "aguarda_resposta_de_id"
+    utilizador ||--o{ solicitacao_jogo : "criado_por"
+    solicitacao_jogo ||--o{ proposta_alteracao : "solicitacao_id"
+    equipa ||--o{ proposta_alteracao : "proposta_por_equipa_id"
+    solicitacao_jogo ||--o| jogo : "solicitacao_id"
+    equipa ||--o{ jogo : "equipa_a_id"
+    equipa ||--o{ jogo : "equipa_b_id"
+    equipa |o--o{ jogo : "cancelado_por_equipa_id"
+    jogo ||--o{ comparencia : "jogo_id"
+    equipa ||--o{ comparencia : "equipa_id"
+    utilizador |o--o{ comparencia : "declarado_por"
+    jogo ||--o{ submissao_resultado : "jogo_id"
+    equipa ||--o{ submissao_resultado : "equipa_id"
+    utilizador ||--o{ submissao_resultado : "submetido_por"
+    jogo ||--o{ caso_analise : "jogo_id"
+    equipa |o--o{ caso_analise : "aberto_por_equipa_id"
+    utilizador |o--o{ caso_analise : "resolvido_por"
+    utilizador ||--o{ notificacao : "utilizador_id"
+    jogo |o--o{ notificacao : "jogo_id"
+    solicitacao_jogo |o--o{ notificacao : "solicitacao_id"
+    utilizador |o--o{ registo_auditoria : "utilizador_id"
+    equipa ||--o| estatistica_equipa : "equipa_id"

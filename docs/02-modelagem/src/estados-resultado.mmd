@@ -1,0 +1,13 @@
+%% M2-08 — Estados do resultado oficial do jogo (enum estado_resultado)
+stateDiagram-v2
+    direction LR
+    [*] --> nao_submetido
+    nao_submetido --> aguarda_adversaria : 1.ª equipa submete
+    aguarda_adversaria --> aguarda_adversaria : 1.ª equipa corrige (nova versão)
+    aguarda_adversaria --> confirmado : 2.ª submissão igual (RN-08)
+    aguarda_adversaria --> divergente : 2.ª submissão diferente
+    divergente --> confirmado : uma equipa corrige e ficam iguais
+    divergente --> em_analise : pedido de análise ou 72 h (RN-20)
+    em_analise --> confirmado : admin decide com justificação
+    confirmado --> em_analise : reabertura pelo admin ≤ 7 dias (RN-21)
+    confirmado --> [*] : conta para o ranking (RN-09, RN-10)

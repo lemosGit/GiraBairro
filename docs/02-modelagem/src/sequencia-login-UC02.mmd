@@ -1,0 +1,28 @@
+%% M2-07 — Sequência UC02 Iniciar sessão
+sequenceDiagram
+    autonumber
+    actor U as PER-03 Responsável
+    participant W as Frontend Web
+    participant A as API
+    participant DB as Base de Dados
+    U->>W: telefone + palavra-passe (TEL-03)
+    W->>A: POST /auth/sessoes {telefone, palavraPasse}
+    A->>DB: SELECT utilizador WHERE telefone
+    DB-->>A: utilizador | vazio
+    alt utilizador inexistente ou palavra-passe errada
+        A->>DB: UPDATE tentativas_falhadas (+1 · bloqueia se ≥5 em 15 min)
+        A-->>W: 401 Credenciais inválidas
+        W-->>U: "Telefone ou palavra-passe incorrectos"
+    else conta bloqueada ou suspensa
+        A-->>W: 423 Locked / 403 Forbidden
+        W-->>U: mensagem com o motivo
+    else credenciais correctas
+        A->>DB: UPDATE tentativas_falhadas = 0
+        A->>DB: SELECT membro_equipa WHERE utilizador_id
+        A-->>W: 200 {token de acesso, refresh, papel, equipaId?}
+        alt tem equipa
+            W-->>U: Dashboard (TEL-05)
+        else sem equipa
+            W-->>U: Registar equipa (TEL-04)
+        end
+    end

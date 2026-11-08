@@ -1,0 +1,22 @@
+%% M2-08 — Estados do jogo (enum estado_jogo)
+stateDiagram-v2
+    [*] --> agendado : solicitação aceite
+    agendado --> cancelado : cancelamento com motivo (RN-24 se < 24 h)
+    agendado --> aguarda_comparencia : chega a hora do jogo
+    aguarda_comparencia --> aguarda_resultado : ambas presentes (validada)
+    aguarda_comparencia --> em_analise : falta contestada ou contraditória
+    aguarda_comparencia --> concluido : falta confirmada (sem resultado — RN-25)
+    em_analise --> aguarda_resultado : admin valida presença de ambas
+    em_analise --> concluido : admin confirma falta / decide resultado
+    aguarda_resultado --> resultado_pendente : 1.ª equipa submete
+    resultado_pendente --> concluido : 2.ª submissão igual (RN-08)
+    resultado_pendente --> divergencia : 2.ª submissão diferente
+    divergencia --> concluido : correcção torna iguais
+    divergencia --> em_analise : pedido de análise ou 72 h (RN-20)
+    concluido --> em_analise : reabertura pelo admin ≤ 7 dias (RN-21)
+    cancelado --> [*]
+    concluido --> [*]
+    note right of aguarda_comparencia
+        Janela de registo: hora do jogo até +7 dias (RN-23).
+        Fora dela só o admin reabre (RF-06.13).
+    end note
