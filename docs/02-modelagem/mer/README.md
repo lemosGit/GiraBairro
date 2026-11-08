@@ -37,3 +37,27 @@
 2. O **resultado oficial** fica no JOGO só quando confirmado (por coincidência ou decisão do admin); as submissões ficam em SUBMISSAO_RESULTADO como histórico.
 3. **Estatísticas e ranking** são **derivados** (não são entidades conceptuais); no modelo lógico existe uma tabela de cache `estatistica_equipa` recalculada (RNF-005).
 4. Suspensões ficam no **estado** de UTILIZADOR/EQUIPA com o motivo em REGISTO_AUDITORIA.
+
+## 2. Modelo lógico/físico (M2-04)
+
+![Modelo lógico](../img/mer-logico.png)
+
+*Gerado por [`scripts/modelo_dados.py`](../../../scripts/modelo_dados.py) → [`../src/mer-logico.mmd`](../src/mer-logico.mmd). Abrir a imagem em tamanho real (7674 px) ou o SVG para ler os atributos.*
+
+Resumo: **18 tabelas, 152 atributos**. Pontos principais:
+
+| Regra | Como é garantida no modelo |
+|-------|----------------------------|
+| Telefone único (RF-01.03) | `utilizador.telefone` UK |
+| Uma equipa por utilizador (RN-18) | `membro_equipa.utilizador_id` é PK |
+| Sem duplicados de equipa (RF-02.09) | UK `(nome_normalizado, bairro_id)` |
+| Nº de camisola único entre activos (RN-04) | Índice único parcial `(equipa_id, numero_camisola) WHERE activo` |
+| 1 contacto principal (RF-04.03) | Índice único parcial `(equipa_id) WHERE principal` |
+| Jogo só após aceitação (RN-05) | `jogo.solicitacao_id` NOT NULL + UK |
+| Comparência por equipa (RN-06) | `comparencia` UK `(jogo_id, equipa_id)` |
+| Histórico de submissões (RF-08.08) | `submissao_resultado.versao` + `actual` |
+| Prazos 48 h / 72 h (RN-16, RN-20) | `comparencia.prazo_resposta_ate`, `jogo.divergente_desde` |
+| Auditoria imutável (RN-12, RNF-031) | `registo_auditoria` só INSERT |
+| Ranking rápido (RNF-005) | `estatistica_equipa` (cache recalculada) |
+
+Detalhe de cada atributo: [dicionário de dados](../dicionario-dados.md) (M2-05).
