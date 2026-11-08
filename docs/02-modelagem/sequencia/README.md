@@ -6,7 +6,7 @@
 | Versão | 1.0 — 2026-11-08 |
 | Base | [Especificação dos UC](../casos-de-uso/especificacao-casos-uso.md), [classes](../diagrama-classes/README.md), [dicionário](../dicionario-dados.md) |
 
-> Os endpoints indicados são **provisórios**: o contrato definitivo é feito na M3-05 (OpenAPI). Códigos HTTP: 200 OK · 201 Criado · 401 Não autenticado · 403 Proibido (RN-13/suspensão) · 409 Conflito de estado · 422 Validação · 423 Bloqueado.
+> Endpoints alinhados com o contrato [`openapi.yaml`](../../03-arquitetura/openapi.yaml) (M3-05); diferenças de nome nas sequências (ex.: `POST /auth/sessoes`) seguem o contrato. Códigos HTTP: 200 OK · 201 Criado · 401 Não autenticado · 403 Proibido (RN-13/suspensão) · 409 Conflito de estado · 422 Validação · 423 Bloqueado.
 
 | # | Caso de uso | Diagrama | Fonte |
 |---|-------------|----------|-------|

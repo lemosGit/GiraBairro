@@ -16,7 +16,7 @@
 | Estados de `estados-comparencia` = enum `estado_comparencia` | ✅ 6/6, sem diferenças |
 | Estados de `estados-resultado` = enum `estado_resultado` | ✅ 5/5, sem diferenças |
 | Entidades do MER conceptual ↔ tabelas do modelo lógico | ✅ 17/17; `estatistica_equipa` só no lógico — **intencional** (cache derivada, RNF-005) |
-| Modelo lógico ↔ dicionário de dados | ✅ Gerados da mesma fonte (`scripts/modelo_dados.py`) — 18 tabelas, 152 atributos |
+| Modelo lógico ↔ dicionário de dados | ✅ Gerados da mesma fonte (`scripts/modelo_dados.py`) — 18 tabelas, 152 atributos (20/165 após M3-05) |
 | Classes ↔ tabelas | ✅ ver justificações abaixo |
 
 ### Diferenças classes ↔ tabelas (justificadas)

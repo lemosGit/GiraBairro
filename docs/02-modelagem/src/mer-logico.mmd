@@ -36,6 +36,23 @@ erDiagram
         TIMESTAMPTZ usado_em
         TIMESTAMPTZ criado_em
     }
+    sessao {
+        UUID id PK
+        UUID utilizador_id FK
+        VARCHAR refresh_token_hash UK
+        VARCHAR cliente
+        TIMESTAMPTZ expira_em
+        TIMESTAMPTZ revogada_em
+        TIMESTAMPTZ criado_em
+    }
+    dispositivo_push {
+        UUID id PK
+        UUID utilizador_id FK
+        VARCHAR token UK
+        VARCHAR plataforma
+        BOOLEAN activo
+        TIMESTAMPTZ criado_em
+    }
     equipa {
         UUID id PK
         VARCHAR nome
@@ -191,6 +208,8 @@ erDiagram
     provincia ||--o{ municipio : "provincia_id"
     municipio ||--o{ bairro : "municipio_id"
     utilizador ||--o{ codigo_recuperacao : "utilizador_id"
+    utilizador ||--o{ sessao : "utilizador_id"
+    utilizador ||--o{ dispositivo_push : "utilizador_id"
     bairro ||--o{ equipa : "bairro_id"
     utilizador ||--o| membro_equipa : "utilizador_id"
     equipa ||--o{ membro_equipa : "equipa_id"

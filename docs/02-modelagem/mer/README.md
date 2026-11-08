@@ -44,7 +44,7 @@
 
 *Gerado por [`scripts/modelo_dados.py`](../../../scripts/modelo_dados.py) → [`../src/mer-logico.mmd`](../src/mer-logico.mmd). Abrir a imagem em tamanho real (7674 px) ou o SVG para ler os atributos.*
 
-Resumo: **18 tabelas, 152 atributos**. Pontos principais:
+Resumo: **20 tabelas, 165 atributos** (`sessao` e `dispositivo_push` acrescentadas em M3-05). Pontos principais:
 
 | Regra | Como é garantida no modelo |
 |-------|----------------------------|
