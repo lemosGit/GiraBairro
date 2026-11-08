@@ -1,0 +1,29 @@
+%% M2-03 — MER conceptual do GiraBairro (entidades, relações e cardinalidades)
+erDiagram
+    PROVINCIA ||--|{ MUNICIPIO : "divide-se em"
+    MUNICIPIO ||--|{ BAIRRO : "divide-se em"
+    BAIRRO ||--o{ EQUIPA : "localiza"
+
+    UTILIZADOR ||--o| MEMBRO_EQUIPA : "é responsável (RN-18: no máx. 1)"
+    EQUIPA ||--|{ MEMBRO_EQUIPA : "tem responsável (RN-01)"
+    EQUIPA ||--o{ JOGADOR : "tem plantel"
+    EQUIPA ||--|{ CONTACTO_EQUIPA : "tem contactos (1 principal)"
+
+    EQUIPA ||--o{ SOLICITACAO_JOGO : "desafia"
+    EQUIPA ||--o{ SOLICITACAO_JOGO : "é desafiada"
+    SOLICITACAO_JOGO ||--o{ PROPOSTA_ALTERACAO : "recebe"
+    SOLICITACAO_JOGO ||--o| JOGO : "origina quando aceite (RN-05)"
+
+    EQUIPA ||--o{ JOGO : "joga como A (casa)"
+    EQUIPA ||--o{ JOGO : "joga como B (fora)"
+    JOGO ||--|{ COMPARENCIA : "tem 1 por equipa (RN-06)"
+    JOGO ||--o{ SUBMISSAO_RESULTADO : "tem versões por equipa"
+    JOGO ||--o{ CASO_ANALISE : "pode gerar"
+    EQUIPA ||--o{ COMPARENCIA : "declara"
+    EQUIPA ||--o{ SUBMISSAO_RESULTADO : "submete"
+
+    UTILIZADOR ||--o{ NOTIFICACAO : "recebe"
+    JOGO |o--o{ NOTIFICACAO : "refere"
+    UTILIZADOR ||--o{ CASO_ANALISE : "decide (PER-05)"
+    UTILIZADOR ||--o{ REGISTO_AUDITORIA : "é autor de"
+    UTILIZADOR ||--o{ CODIGO_RECUPERACAO : "pede"
