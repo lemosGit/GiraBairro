@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M1-05 Levantar requisitos não funcionais por persona (33 RNF) | #20 | `docs/01-requisitos/requisitos-nao-funcionais.md` |
-| ⏭️ **Próxima tarefa** | M1-11 Fechar as decisões pendentes do MVP | #22 | `docs/00-gestao/actas/decisoes-mvp.md` |
+| ✅ **Última tarefa feita** | M1-11 Fechar as decisões pendentes do MVP (10 decisões) | #22 | `docs/00-gestao/actas/decisoes-mvp.md` |
+| ⏭️ **Próxima tarefa** | M1-06 Consolidar regras de negócio | #21 | `docs/01-requisitos/regras-negocio.md` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -22,6 +22,7 @@
 | 2026-11-08 | M1-03a | #18 | Jornada do utilizador por persona | `img/jornada-PER-03.png`, `img/jornada-PER-05.png` + tabelas em `personas.md` |
 | 2026-11-08 | M1-04 | #19 | Consolidar requisitos funcionais (95 RF) com persona | `docs/01-requisitos/requisitos-funcionais.md` |
 | 2026-11-08 | M1-05 | #20 | Levantar requisitos não funcionais por persona (33 RNF) | `docs/01-requisitos/requisitos-nao-funcionais.md` |
+| 2026-11-08 | M1-11 | #22 | Fechar as decisões pendentes do MVP (10 decisões) | `docs/00-gestao/actas/decisoes-mvp.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
