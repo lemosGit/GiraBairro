@@ -7,6 +7,9 @@
 |---|--------|-------|------------|
 | ✅ **Última tarefa feita** | M1-09 Matriz de rastreabilidade RF ↔ Persona ↔ US ↔ Tela | #27 | `docs/01-requisitos/rastreabilidade.md` |
 | ⏭️ **Próxima tarefa** | M1-10 Validar requisitos com o cliente/orientador | #28 | acta em `docs/00-gestao/actas/` |
+
+> **PRs a aguardar merge:** #125 (quadro) → #126 (M1, parte do #125). **Quadro:** 6 Feito · 16 Em revisão · 1 Em curso (M1-10) · 100 Backlog.
+> **M1-10** precisa da sua validação: rever e marcar [`validacao-requisitos-m1.md`](docs/00-gestao/actas/validacao-requisitos-m1.md). Depois segue o **M2** (M2-01 Casos de uso, M2-03 MER).
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
