@@ -5,8 +5,8 @@
 
 | | Tarefa | Issue | Entregável |
 |---|--------|-------|------------|
-| ✅ **Última tarefa feita** | M1-08 User stories com critérios de aceitação (31 US) | #26 | `docs/01-requisitos/user-stories.md` |
-| ⏭️ **Próxima tarefa** | M1-09 Matriz de rastreabilidade | #27 | `docs/01-requisitos/rastreabilidade.md` |
+| ✅ **Última tarefa feita** | M1-09 Matriz de rastreabilidade RF ↔ Persona ↔ US ↔ Tela | #27 | `docs/01-requisitos/rastreabilidade.md` |
+| ⏭️ **Próxima tarefa** | M1-10 Validar requisitos com o cliente/orientador | #28 | acta em `docs/00-gestao/actas/` |
 <!-- ESTADO:FIM -->
 
 ## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
@@ -28,6 +28,7 @@
 | 2026-11-08 | M1-07 | #24 | Priorizar requisitos MoSCoW (RF: 83 Must, 10 Should, 2 Could; RNF: 21 Must, 12 Should) | `priorizacao-moscow.md` + coluna de prioridade em `requisitos-funcionais.md` |
 | 2026-11-08 | M1-07a | #25 | Quadro MoSCoW visual | `img/moscow.png` + `src/moscow.mmd` |
 | 2026-11-08 | M1-08 | #26 | User stories com critérios de aceitação (31 US) | `docs/01-requisitos/user-stories.md` |
+| 2026-11-08 | M1-09 | #27 | Matriz de rastreabilidade RF ↔ Persona ↔ US ↔ Tela | `docs/01-requisitos/rastreabilidade.md` |
 <!-- REGISTO:FIM -->
 
 > Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
