@@ -1,0 +1,28 @@
+%% M1-02b — Processo AS-IS (actual): marcação informal de jogos entre equipas de bairro
+flowchart LR
+    subgraph A["🧢 Equipa A (responsável)"]
+        direction TB
+        a1([Quer jogar]) --> a2[Procura contacto<br/>de outra equipa<br/>boca-a-boca / WhatsApp]
+        a2 --> a3[Liga / envia mensagem<br/>a propor data e campo]
+        a5[Combina por telefone<br/>sem registo]
+        a7{Equipa B<br/>apareceu?}
+        a8[Joga e cada equipa<br/>guarda o 'seu' resultado]
+        a9[Perde tempo e<br/>conta a falta só<br/>de boca]
+        a10([Fim — sem histórico<br/>nem classificação])
+    end
+    subgraph B["🧢 Equipa B (responsável)"]
+        direction TB
+        b1{Atende /<br/>responde?}
+        b2[Aceita ou propõe<br/>outra data]
+        b3[Esquece ou desmarca<br/>à última hora]
+    end
+    a3 --> b1
+    b1 -- não --> a2
+    b1 -- sim --> b2 --> a5
+    a5 --> a7
+    b2 -.-> b3 -.-> a7
+    a7 -- sim --> a8 --> a10
+    a7 -- não --> a9 --> a10
+
+    classDef dor fill:#ffe4e4,stroke:#c0392b,color:#000
+    class a2,a5,a8,a9,b3 dor

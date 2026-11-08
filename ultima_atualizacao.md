@@ -1,4 +1,42 @@
-# Última actualização — Configuração do repositório e backlog do MVP
+# Última actualização — GiraBairro
+
+<!-- ESTADO:INICIO -->
+## 📍 Estado actual
+
+| | Tarefa | Issue | Entregável |
+|---|--------|-------|------------|
+| ✅ **Última tarefa feita** | M1-10 Validar requisitos (aprovados pelo dono do produto) | #28 | `docs/00-gestao/actas/validacao-requisitos-m1.md` |
+| ⏭️ **Próxima tarefa** | M2-01 Diagrama de casos de uso | #29 | `docs/02-modelagem/img/casos-de-uso.png` |
+<!-- ESTADO:FIM -->
+
+## 🗒️ Registo de progresso — M1 Levantamento de Requisitos
+
+| Data | Código | Issue | Tarefa | Entregáveis |
+|------|--------|-------|--------|-------------|
+| 2026-11-08 | M1-01 | #12 | Elaborar documento de visão | `docs/01-requisitos/visao.md` |
+| 2026-11-08 | M1-01a | #13 | Diagrama de contexto do sistema | `img/contexto.png` + `src/contexto.mmd` |
+| 2026-11-08 | M1-02 | #14 | Identificar stakeholders | `docs/01-requisitos/stakeholders.md` |
+| 2026-11-08 | M1-02a | #15 | Mapa de stakeholders (influência × interesse) | `img/stakeholders.png` + `src/stakeholders.mmd` |
+| 2026-11-08 | M1-02b | #16 | Processo AS-IS e TO-BE | `processos.md` + `img/processo-as-is.png`, `img/processo-to-be.png` |
+| 2026-11-08 | M1-03 | #17 | Definir personas (PER-01 a PER-05) | `docs/01-requisitos/personas.md` |
+| 2026-11-08 | M1-03a | #18 | Jornada do utilizador por persona | `img/jornada-PER-03.png`, `img/jornada-PER-05.png` + tabelas em `personas.md` |
+| 2026-11-08 | M1-04 | #19 | Consolidar requisitos funcionais (95 RF) com persona | `docs/01-requisitos/requisitos-funcionais.md` |
+| 2026-11-08 | M1-05 | #20 | Levantar requisitos não funcionais por persona (33 RNF) | `docs/01-requisitos/requisitos-nao-funcionais.md` |
+| 2026-11-08 | M1-11 | #22 | Fechar as decisões pendentes do MVP (10 decisões) | `docs/00-gestao/actas/decisoes-mvp.md` |
+| 2026-11-08 | M1-06 | #21 | Consolidar regras de negócio (RN-01 a RN-25) | `docs/01-requisitos/regras-negocio.md` |
+| 2026-11-08 | M1-12 | #23 | Especificar a fórmula de ranking e estrelas | secção 3 de `regras-negocio.md` (fórmula, 5 exemplos, texto público) |
+| 2026-11-08 | M1-07 | #24 | Priorizar requisitos MoSCoW (RF: 83 Must, 10 Should, 2 Could; RNF: 21 Must, 12 Should) | `priorizacao-moscow.md` + coluna de prioridade em `requisitos-funcionais.md` |
+| 2026-11-08 | M1-07a | #25 | Quadro MoSCoW visual | `img/moscow.png` + `src/moscow.mmd` |
+| 2026-11-08 | M1-08 | #26 | User stories com critérios de aceitação (31 US) | `docs/01-requisitos/user-stories.md` |
+| 2026-11-08 | M1-09 | #27 | Matriz de rastreabilidade RF ↔ Persona ↔ US ↔ Tela | `docs/01-requisitos/rastreabilidade.md` |
+| 2026-11-08 | M1-10 | #28 | Validar requisitos (aprovados pelo dono do produto) | `docs/00-gestao/actas/validacao-requisitos-m1.md` |
+<!-- REGISTO:FIM -->
+
+> Notas do M1: os diagramas são escritos em **Mermaid** (`docs/01-requisitos/src/*.mmd`) e exportados para SVG/PNG com `python3 scripts/render_mermaid.py <ficheiro.mmd>` (Chrome headless). Os de estilo "Excalidraw" usam `look: handDrawn`. O `.mmd` pode ser importado no Excalidraw (*Mermaid to Excalidraw*) e no draw.io (*Arrange → Insert → Mermaid*) para acabamento. Motivo: o draw.io MCP ainda não está ligado (M0-10) e o disco do sistema está cheio, impedindo instalar ferramentas.
+
+---
+
+# Histórico — Configuração do repositório e backlog do MVP (M0)
 
 **Data:** 2026-11-08 (actualizado)
 **Repositório:** <https://github.com/lemosGit/GiraBairro>

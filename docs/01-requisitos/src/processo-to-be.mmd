@@ -1,0 +1,51 @@
+%% M1-02b — Processo TO-BE (com o GiraBairro): solicitação → jogo → comparência → resultado → ranking
+flowchart LR
+    subgraph A["🧢 Equipa desafiante — PER-03"]
+        direction TB
+        a1([Quer jogar]) --> a2[Pesquisa equipas por<br/>bairro / município / província<br/>RF-05.01/02]
+        a2 --> a3[Envia solicitação:<br/>data, hora, campo, obs.<br/>RF-05.03/04]
+        a4{Alteração<br/>proposta?}
+        a5[Aceita a alteração<br/>ou cancela]
+        a6[Declara comparência<br/>RF-07.02/03]
+        a7[Submete resultado<br/>RF-06.06]
+    end
+    subgraph S["⚽ GiraBairro (sistema)"]
+        direction TB
+        s1[Regista solicitação<br/>estado: Pendente<br/>notifica — RF-10.01]
+        s2[Cria jogo Agendado<br/>RN-05 · notifica ambas]
+        s3[Lembrete antes do jogo<br/>RF-10.04]
+        s4{Comparências<br/>coerentes?}
+        s5{Resultados<br/>iguais? RN-08}
+        s6[Resultado Confirmado<br/>actualiza ranking<br/>RF-09.09]
+        s7[Divergência:<br/>notifica — RF-08.05]
+        s8([Jogo Concluído<br/>histórico auditável RN-12])
+        s9[Sinaliza contradição<br/>RF-07.05]
+    end
+    subgraph B["🧢 Equipa desafiada — PER-03"]
+        direction TB
+        b1{Responde à<br/>solicitação}
+        b2[Recusa]
+        b3[Declara comparência]
+        b4[Submete resultado]
+        b5[Corrige o seu<br/>resultado RF-08.06]
+    end
+    subgraph AD["🛡️ Administrador — PER-05"]
+        direction TB
+        d1[Analisa caso e corrige<br/>com justificação<br/>RF-11.03/04]
+    end
+
+    a3 --> s1 --> b1
+    b1 -- recusa --> b2 --> s8
+    b1 -- propõe alteração --> a4
+    a4 -- sim --> a5 --> s2
+    b1 -- aceita --> s2
+    s2 --> s3 --> a6 & b3
+    a6 & b3 --> s4
+    s4 -- não --> s9 --> d1
+    s4 -- sim --> a7 & b4
+    a7 & b4 --> s5
+    s5 -- sim --> s6 --> s8
+    s5 -- não --> s7
+    s7 --> b5 --> s5
+    s7 -- "solicitar análise<br/>RF-08.07" --> d1
+    d1 --> s6

@@ -1,0 +1,26 @@
+%% look: handDrawn
+%% M1-07a — Quadro MoSCoW (gerado a partir de priorizacao-moscow.md)
+flowchart LR
+    subgraph MUST["🟥 MUST — 83 RF · 21 RNF"]
+        direction TB
+        m1["RF-01 Autenticação<br/>RF-02 Equipas<br/>RF-03 Jogadores<br/>RF-04 Contactos<br/>RF-05 Solicitações<br/>RF-06 Jogos<br/>RF-07 Comparência<br/>RF-08 Resultados<br/>RF-09 Ranking<br/>RF-10 Notificações<br/>RF-11 Administração<br/>(excepto os ao lado)"]
+        m2["RNF-001, 004, 010–012, 015, 016<br/>020–025, 030, 031, 033–035<br/>040, 043, 046"]
+    end
+    subgraph SHOULD["🟧 SHOULD — 10 RF · 12 RNF"]
+        direction TB
+        s1["RF-01.06<br/>RF-02.04<br/>RF-02.09<br/>RF-04.03<br/>RF-05.06<br/>RF-06.13<br/>RF-07.08<br/>RF-10.04<br/>RF-11.02<br/>RF-11.06"]
+        s2["RNF-002, 003, 005, 013, 014<br/>026, 027, 032, 041, 042<br/>044, 045"]
+    end
+    subgraph COULD["🟨 COULD — 2 RF"]
+        direction TB
+        c1["RF-02.05<br/>RF-05.11"]
+    end
+    subgraph WONT["⬜ WON'T — fora do MVP"]
+        direction TB
+        w1["Campeonatos · Árbitros<br/>Pagamentos · Directos<br/>Chat · Transferências<br/>IA · Patrocínios<br/>App nativa · SMS/WhatsApp<br/>Várias equipas por conta"]
+    end
+    MUST ~~~ SHOULD ~~~ COULD ~~~ WONT
+    style MUST fill:#fde2e2,stroke:#b60205
+    style SHOULD fill:#fde9d9,stroke:#d93f0b
+    style COULD fill:#fff6cc,stroke:#c9a400
+    style WONT fill:#eeeeee,stroke:#999999
