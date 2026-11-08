@@ -1,0 +1,25 @@
+%% M3-06 — Fluxo de autenticação (login, uso, renovação, reutilização de refresh)
+sequenceDiagram
+    autonumber
+    participant C as Cliente (Web BFF / App)
+    participant A as API
+    participant DB as PostgreSQL
+    C->>A: POST /v1/auth/sessoes {telefone, palavra_passe, cliente}
+    A->>DB: utilizador + verificação Argon2id + bloqueio
+    A->>DB: INSERT sessao (hash do refresh, expira 30 dias)
+    A-->>C: 200 {access JWT 15 min, refresh}
+    Note over C: Web guarda em cookie HttpOnly · App em SecureStore
+    C->>A: GET /v1/dashboard (Authorization: Bearer access)
+    A->>A: valida assinatura, exp, papel
+    A-->>C: 200
+    C->>A: pedido com access expirado
+    A-->>C: 401 token expirado
+    C->>A: POST /v1/auth/sessoes/renovar {refresh}
+    A->>DB: procura sessao pelo hash
+    alt refresh válido e actual
+        A->>DB: revoga o antigo + INSERT novo (rotação)
+        A-->>C: 200 {novo access, novo refresh}
+    else refresh já rodado (reutilização)
+        A->>DB: revoga TODAS as sessões do utilizador
+        A-->>C: 401 → pedir login
+    end

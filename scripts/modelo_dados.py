@@ -66,6 +66,21 @@ TABLES = [
   ("tentativas", "SMALLINT", "", "Não", "", "0", "Tentativas usadas (máx. 3)"),
   ("usado_em", "TIMESTAMPTZ", "", "Sim", "", "", "Quando foi usado"),
   ("criado_em", "TIMESTAMPTZ", "", "Não", "", NOW, "Data de criação")]),
+ ("sessao", "Refresh tokens das sessões (ADR-006) — acrescentada em M3-05", [
+  ("id", "UUID", "", "Não", "PK", U, "Identificador"),
+  ("utilizador_id", "UUID", "", "Não", "FK→utilizador.id", "", "Dono da sessão"),
+  ("refresh_token_hash", "VARCHAR", "255", "Não", "UK", "", "Hash do refresh token (rotativo)"),
+  ("cliente", "VARCHAR", "20", "Não", "", "", "web | mobile"),
+  ("expira_em", "TIMESTAMPTZ", "", "Não", "", "", "Validade (30 dias)"),
+  ("revogada_em", "TIMESTAMPTZ", "", "Sim", "", "", "Logout, recuperação de palavra-passe ou suspensão"),
+  ("criado_em", "TIMESTAMPTZ", "", "Não", "", NOW, "Início da sessão")]),
+ ("dispositivo_push", "Tokens de notificação push da app (M8-06) — acrescentada em M3-05", [
+  ("id", "UUID", "", "Não", "PK", U, "Identificador"),
+  ("utilizador_id", "UUID", "", "Não", "FK→utilizador.id", "", "Dono do dispositivo"),
+  ("token", "VARCHAR", "255", "Não", "UK", "", "Expo push token"),
+  ("plataforma", "VARCHAR", "10", "Não", "", "", "android | ios"),
+  ("activo", "BOOLEAN", "", "Não", "", "true", "Falso quando o token é rejeitado ou no logout"),
+  ("criado_em", "TIMESTAMPTZ", "", "Não", "", NOW, "Registo do dispositivo")]),
  ("equipa", "Equipas de bairro (RF-02)", [
   ("id", "UUID", "", "Não", "PK", U, "Identificador"),
   ("nome", "VARCHAR", "80", "Não", "", "", "Nome da equipa"),

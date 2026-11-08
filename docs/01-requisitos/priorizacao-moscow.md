@@ -59,7 +59,7 @@
 | Gestão médica, equipamentos, inventário | Não contribuem para o princípio central |
 | Patrocínios e publicidade, gamificação avançada | Monetização/engajamento posteriores à validação |
 | Integração com calendários externos | Valor baixo face às notificações internas |
-| App móvel nativa (M8, M10-05) | 1.ª versão web responsiva (RNF-010); reavaliar em M3-01 |
+| ~~App móvel nativa~~ | **Revisto em M3-01:** a app React Native passa a fazer parte do MVP (M8 = must, M10-05 = should) — ver [decisão 11](../00-gestao/actas/decisoes-mvp.md) |
 | Notificações por SMS/WhatsApp (excepto código de recuperação) | Decisão 10 da acta |
 | Mais de uma equipa por conta | Decisão 4 da acta (RN-18) |
 

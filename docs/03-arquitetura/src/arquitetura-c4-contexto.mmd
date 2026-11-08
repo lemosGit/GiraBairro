@@ -1,0 +1,21 @@
+%% M3-03 — C4 nível 1: contexto do sistema
+flowchart TB
+    v["<b>Visitante</b><br/>[PER-01]<br/>Consulta equipas e rankings"]
+    r["<b>Responsável da equipa</b><br/>[PER-03]<br/>Gere equipa, jogos, comparência, resultados"]
+    a["<b>Administrador</b><br/>[PER-05]<br/>Modera e decide casos"]
+    gb["<b>GiraBairro</b><br/>[Sistema de software]<br/>Marcação de jogos, comparência,<br/>confirmação bilateral e ranking"]
+    sms["<b>Fornecedor SMS</b><br/>[Sistema externo]<br/>Envia códigos de recuperação"]
+    push["<b>Expo Push / FCM</b><br/>[Sistema externo]<br/>Entrega notificações na app"]
+    s3["<b>Armazenamento S3</b><br/>[Sistema externo]<br/>Guarda emblemas"]
+    v -- "Consulta<br/>[HTTPS]" --> gb
+    r -- "Usa (web e app)<br/>[HTTPS]" --> gb
+    a -- "Administra<br/>[HTTPS]" --> gb
+    gb -- "Envia OTP<br/>[HTTPS/API]" --> sms
+    gb -- "Envia push<br/>[HTTPS/API]" --> push
+    gb -- "Lê/grava ficheiros<br/>[S3 API]" --> s3
+    classDef person fill:#08427b,color:#fff,stroke:#052e56
+    classDef system fill:#1168bd,color:#fff,stroke:#0b4884
+    classDef ext fill:#999999,color:#fff,stroke:#6b6b6b
+    class v,r,a person
+    class gb system
+    class sms,push,s3 ext

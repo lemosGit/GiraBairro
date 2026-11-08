@@ -1,0 +1,29 @@
+%% M3-07 — Deploy (staging e prod, opção A: VPS + BD gerida)
+flowchart LR
+    U["👥 Utilizadores<br/>navegador / app Android"]
+    CF["Cloudflare<br/>DNS + CDN + WAF"]
+    subgraph VPS["VPS — Docker Compose"]
+        direction TB
+        CAD["Caddy<br/>HTTPS automático"]
+        WEB["web<br/>Next.js"]
+        API["api<br/>FastAPI (uvicorn)"]
+        WRK["worker<br/>APScheduler"]
+    end
+    PG[("PostgreSQL gerido<br/>backups diários + PITR")]
+    S3[("Bucket S3<br/>emblemas")]
+    EXT["Serviços externos<br/>SMS · Expo Push · Sentry"]
+    GH["GitHub Actions<br/>CI/CD"]
+    REG["GitHub Container Registry"]
+    U -- HTTPS --> CF -- HTTPS --> CAD
+    CAD -- "girabairro.tld" --> WEB
+    CAD -- "api.girabairro.tld" --> API
+    U -. "app → api.girabairro.tld" .-> CF
+    WEB --> API
+    API --> PG
+    WRK --> PG
+    API --> S3
+    API --> EXT
+    WRK --> EXT
+    GH -- "build + push imagens" --> REG
+    GH -- "deploy (ssh / compose pull)" --> VPS
+    REG -. imagens .-> VPS

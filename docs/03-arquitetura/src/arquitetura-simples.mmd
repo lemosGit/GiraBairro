@@ -1,0 +1,12 @@
+%% look: handDrawn
+%% M3-03 (versão cliente) — Arquitetura simplificada
+flowchart LR
+    T["📱 Telemóvel<br/>App GiraBairro"]
+    N["💻 Navegador<br/>girabairro (site)"]
+    S["🧠 Servidor GiraBairro<br/>regras, ranking, avisos"]
+    D[("🗄️ Base de dados<br/>equipas, jogos, resultados")]
+    X["✉️ SMS e notificações"]
+    T -- "1. marca jogos, regista resultado" --> S
+    N -- "1. consulta e gere a equipa" --> S
+    S -- "2. guarda tudo com histórico" --> D
+    S -- "3. avisa as equipas" --> X

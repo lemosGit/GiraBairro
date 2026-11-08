@@ -9,7 +9,7 @@
 
 Convenções: nomes em `snake_case` português; datas em **UTC** (`TIMESTAMPTZ`) mostradas em WAT (RNF-034); `UK(a,b)` = unicidade composta; FK com `ON DELETE RESTRICT` salvo indicação.
 
-**18 tabelas · 152 atributos · 14 enumerações**
+**20 tabelas · 165 atributos · 14 enumerações**
 
 ## Índice
 
@@ -18,6 +18,8 @@ Convenções: nomes em `snake_case` português; datas em **UTC** (`TIMESTAMPTZ`)
 - [`bairro`](#bairro) — Bairros de cada município
 - [`utilizador`](#utilizador) — Contas de acesso (RF-01)
 - [`codigo_recuperacao`](#codigo_recuperacao) — Códigos OTP de recuperação de palavra-passe (RF-01.07)
+- [`sessao`](#sessao) — Refresh tokens das sessões (ADR-006) — acrescentada em M3-05
+- [`dispositivo_push`](#dispositivo_push) — Tokens de notificação push da app (M8-06) — acrescentada em M3-05
 - [`equipa`](#equipa) — Equipas de bairro (RF-02)
 - [`membro_equipa`](#membro_equipa) — Responsável da equipa (RN-01, RN-18)
 - [`jogador`](#jogador) — Plantel (RF-03)
@@ -92,6 +94,33 @@ Códigos OTP de recuperação de palavra-passe (RF-01.07)
 | `codigo_recuperacao` | `tentativas` | SMALLINT | — | Não | — | `0` | Tentativas usadas (máx. 3) |
 | `codigo_recuperacao` | `usado_em` | TIMESTAMPTZ | — | Sim | — | — | Quando foi usado |
 | `codigo_recuperacao` | `criado_em` | TIMESTAMPTZ | — | Não | — | `now()` | Data de criação |
+
+## sessao
+
+Refresh tokens das sessões (ADR-006) — acrescentada em M3-05
+
+| Tabela | Atributo | Tipo | Tamanho | Nulo | Chave | Default | Descrição |
+|--------|----------|------|---------|------|-------|---------|-----------|
+| `sessao` | `id` | UUID | — | Não | PK | `gen_random_uuid()` | Identificador |
+| `sessao` | `utilizador_id` | UUID | — | Não | FK→utilizador.id | — | Dono da sessão |
+| `sessao` | `refresh_token_hash` | VARCHAR | 255 | Não | UK | — | Hash do refresh token (rotativo) |
+| `sessao` | `cliente` | VARCHAR | 20 | Não | — | — | web | mobile |
+| `sessao` | `expira_em` | TIMESTAMPTZ | — | Não | — | — | Validade (30 dias) |
+| `sessao` | `revogada_em` | TIMESTAMPTZ | — | Sim | — | — | Logout, recuperação de palavra-passe ou suspensão |
+| `sessao` | `criado_em` | TIMESTAMPTZ | — | Não | — | `now()` | Início da sessão |
+
+## dispositivo_push
+
+Tokens de notificação push da app (M8-06) — acrescentada em M3-05
+
+| Tabela | Atributo | Tipo | Tamanho | Nulo | Chave | Default | Descrição |
+|--------|----------|------|---------|------|-------|---------|-----------|
+| `dispositivo_push` | `id` | UUID | — | Não | PK | `gen_random_uuid()` | Identificador |
+| `dispositivo_push` | `utilizador_id` | UUID | — | Não | FK→utilizador.id | — | Dono do dispositivo |
+| `dispositivo_push` | `token` | VARCHAR | 255 | Não | UK | — | Expo push token |
+| `dispositivo_push` | `plataforma` | VARCHAR | 10 | Não | — | — | android | ios |
+| `dispositivo_push` | `activo` | BOOLEAN | — | Não | — | `true` | Falso quando o token é rejeitado ou no logout |
+| `dispositivo_push` | `criado_em` | TIMESTAMPTZ | — | Não | — | `now()` | Registo do dispositivo |
 
 ## equipa
 

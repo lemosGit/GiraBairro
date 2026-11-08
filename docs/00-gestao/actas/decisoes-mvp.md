@@ -37,3 +37,14 @@
 - M6-14 (SMS/WhatsApp) mantém prioridade *could* (decisão 10).
 - M3-06 (segurança) deve incluir as regras de visibilidade das decisões 3 e 9.
 - M2-03 (MER) deve modelar: prazo de resposta da falta (48 h), prazo de correcção da divergência (72 h), janela de reabertura (7 dias), visibilidade do plantel.
+
+## Decisão 11 — Stack e app móvel (2026-11-08, M3-01)
+
+| Tema | Decisão | Consequência |
+|------|---------|--------------|
+| Frontend web | **Next.js** | M7 |
+| Backend / API | **FastAPI** (Python) | M5, M6 |
+| App móvel | **React Native** — a app **entra no MVP** (revê a secção 8 da especificação) | M8 passa de *won't* a *must* (M8-06 *should*); M10-05 passa a *should* |
+| Base de dados | **PostgreSQL** (pressuposto do M2, confirmado) | M5-03 |
+
+Detalhe e justificação: [`docs/03-arquitetura/stack.md`](../../03-arquitetura/stack.md) e ADR-001 a ADR-004.

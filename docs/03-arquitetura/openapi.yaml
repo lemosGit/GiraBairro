@@ -1,0 +1,2810 @@
+# Gerado por scripts/gerar_openapi.py — editar o script, não este ficheiro.
+openapi: 3.0.3
+info:
+  title: GiraBairro API
+  version: 0.1.0
+  description: 'Contrato da API do GiraBairro (M3-05). Consumido pela web (Next.js) e pela app (React Native).
+
+
+    - Autenticação: `Authorization: Bearer <access_token>` (ADR-006).
+
+    - Datas em ISO 8601 UTC; a interface mostra em `Africa/Luanda` (RNF-034).
+
+    - Erros no formato `Erro`.
+
+    - Operações de escrita sobre uma equipa/jogo exigem ser responsável dessa equipa / participante do jogo (RN-13) → 403.
+
+    - Rotas `/admin/*` exigem papel `admin`.'
+servers:
+- url: http://localhost:8000/v1
+  description: Desenvolvimento
+- url: https://api.staging.girabairro.example/v1
+  description: Staging (domínio a definir — M3-07)
+tags:
+- name: auth
+  description: Conta e sessão — RF-01
+- name: utilizadores
+  description: Perfil — RF-01.06
+- name: localizacao
+  description: Províncias, municípios, bairros
+- name: equipas
+  description: Equipas — RF-02
+- name: jogadores
+  description: Plantel — RF-03
+- name: contactos
+  description: Contactos — RF-04
+- name: solicitacoes
+  description: Solicitações de jogo — RF-05
+- name: jogos
+  description: Jogos — RF-05/06
+- name: comparencias
+  description: Comparência — RF-07
+- name: resultados
+  description: Resultados e divergências — RF-06/08
+- name: ranking
+  description: Ranking e estrelas — RF-09
+- name: notificacoes
+  description: Notificações — RF-10
+- name: dashboard
+  description: Dashboard — TEL-05
+- name: admin
+  description: Administração — RF-11 (papel admin)
+security:
+- bearer: []
+paths:
+  /auth/registo:
+    post:
+      tags:
+      - auth
+      summary: Criar conta
+      description: '**Requisitos:** RF-01.01–03, UC01
+
+
+        409 se o telefone já existe (RF-01.03).'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistoIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sessao'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+        '429':
+          $ref: '#/components/responses/E429'
+      security: []
+  /auth/sessoes:
+    post:
+      tags:
+      - auth
+      summary: Iniciar sessão
+      description: '**Requisitos:** RF-01.04, UC02, RNF-021'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sessao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '423':
+          $ref: '#/components/responses/E423'
+        '429':
+          $ref: '#/components/responses/E429'
+      security: []
+    delete:
+      tags:
+      - auth
+      summary: Terminar sessão (revoga o refresh token)
+      description: '**Requisitos:** RF-01.05'
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+  /auth/sessoes/renovar:
+    post:
+      tags:
+      - auth
+      summary: Renovar tokens (refresh rotativo)
+      description: '**Requisitos:** ADR-006'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+              - refresh_token
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPar'
+        '401':
+          $ref: '#/components/responses/E401'
+      security: []
+  /auth/recuperacao:
+    post:
+      tags:
+      - auth
+      summary: Pedir código de recuperação por SMS
+      description: '**Requisitos:** RF-01.07, UC03
+
+
+        Responde sempre 202, exista ou não a conta (não revela contas).'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telefone:
+                  $ref: '#/components/schemas/Telefone'
+              required:
+              - telefone
+      responses:
+        '202':
+          description: Sem conteúdo
+        '429':
+          $ref: '#/components/responses/E429'
+      security: []
+  /auth/recuperacao/confirmar:
+    post:
+      tags:
+      - auth
+      summary: Confirmar código e definir nova palavra-passe
+      description: '**Requisitos:** RF-01.07, RNF-025'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telefone:
+                  $ref: '#/components/schemas/Telefone'
+                codigo:
+                  type: string
+                  maxLength: 6
+                  pattern: ^[0-9]{6}$
+                nova_palavra_passe:
+                  $ref: '#/components/schemas/PalavraPasse'
+              required:
+              - telefone
+              - codigo
+              - nova_palavra_passe
+      responses:
+        '204':
+          description: Sem conteúdo
+        '422':
+          $ref: '#/components/responses/E422'
+        '429':
+          $ref: '#/components/responses/E429'
+      security: []
+  /me:
+    get:
+      tags:
+      - utilizadores
+      summary: Dados do utilizador actual
+      description: '**Requisitos:** RF-01.06, TEL-21'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Utilizador'
+        '401':
+          $ref: '#/components/responses/E401'
+    patch:
+      tags:
+      - utilizadores
+      summary: Editar dados básicos
+      description: '**Requisitos:** RF-01.06'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UtilizadorPatch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Utilizador'
+        '401':
+          $ref: '#/components/responses/E401'
+        '422':
+          $ref: '#/components/responses/E422'
+  /me/palavra-passe:
+    post:
+      tags:
+      - utilizadores
+      summary: Alterar palavra-passe
+      description: '**Requisitos:** TEL-21'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actual:
+                  $ref: '#/components/schemas/PalavraPasse'
+                nova:
+                  $ref: '#/components/schemas/PalavraPasse'
+              required:
+              - actual
+              - nova
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '422':
+          $ref: '#/components/responses/E422'
+  /provincias:
+    get:
+      tags:
+      - localizacao
+      summary: Listar províncias
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Local'
+      security: []
+  /provincias/{provincia_id}/municipios:
+    get:
+      tags:
+      - localizacao
+      summary: Municípios de uma província
+      parameters:
+      - name: provincia_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Local'
+      security: []
+  /municipios/{municipio_id}/bairros:
+    get:
+      tags:
+      - localizacao
+      summary: Bairros de um município
+      parameters:
+      - name: municipio_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Local'
+      security: []
+  /equipas:
+    get:
+      tags:
+      - equipas
+      summary: Pesquisar equipas
+      description: '**Requisitos:** RF-02.08, RF-05.01–02, TEL-10'
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 80
+        description: Nome (parcial)
+      - name: provincia_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: ''
+      - name: municipio_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: ''
+      - name: bairro_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: ''
+      - name: disponiveis
+        in: query
+        required: false
+        schema: &id007
+          type: boolean
+        description: Só equipas activas
+      - &id002
+        name: pagina
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+        description: ''
+      - &id003
+        name: tamanho
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaEquipaResumo'
+        '401':
+          $ref: '#/components/responses/E401'
+      security:
+      - {}
+      - bearer: []
+    post:
+      tags:
+      - equipas
+      summary: Registar equipa
+      description: '**Requisitos:** RF-02.01–03, RF-02.09, RN-18, UC04
+
+
+        409 se o utilizador já administra uma equipa (RN-18) ou duplicado nome+bairro (RF-02.09).'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipaIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipaPerfil'
+        '401':
+          $ref: '#/components/responses/E401'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+  /equipas/{equipa_id}:
+    get:
+      tags:
+      - equipas
+      summary: Perfil público da equipa
+      description: '**Requisitos:** RF-02.07, RF-04.05, RN-17, RN-22, TEL-11'
+      parameters:
+      - &id001
+        name: equipa_id
+        in: path
+        required: true
+        schema: &id004
+          type: string
+          format: uuid
+        description: Equipa
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipaPerfil'
+        '401':
+          $ref: '#/components/responses/E401'
+        '404':
+          $ref: '#/components/responses/E404'
+      security:
+      - {}
+      - bearer: []
+    patch:
+      tags:
+      - equipas
+      summary: Editar equipa
+      description: '**Requisitos:** RF-02.06, RN-02'
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipaPatch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipaPerfil'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+  /equipas/{equipa_id}/emblema:
+    put:
+      tags:
+      - equipas
+      summary: Carregar emblema
+      description: '**Requisitos:** RF-02.04, RNF-003
+
+
+        JPG/PNG/WebP até 2 MB.'
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ficheiro:
+                  type: string
+                  format: binary
+              required:
+              - ficheiro
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  emblema_url:
+                    type: string
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '422':
+          $ref: '#/components/responses/E422'
+  /equipas/{equipa_id}/jogos:
+    get:
+      tags:
+      - equipas
+      summary: Histórico de jogos da equipa
+      description: '**Requisitos:** RF-06.12, RF-07.08'
+      parameters:
+      - *id001
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaJogo'
+        '401':
+          $ref: '#/components/responses/E401'
+      security:
+      - {}
+      - bearer: []
+  /equipas/{equipa_id}/jogadores:
+    get:
+      tags:
+      - jogadores
+      summary: Listar jogadores (inclui inactivos)
+      description: '**Requisitos:** RF-03.05, TEL-07'
+      parameters:
+      - *id001
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jogador'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+    post:
+      tags:
+      - jogadores
+      summary: Adicionar jogador
+      description: '**Requisitos:** RF-03.01–02, RN-04
+
+
+        409 se o número já está em uso (RN-04).'
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JogadorIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogador'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+  /equipas/{equipa_id}/jogadores/{jogador_id}:
+    patch:
+      tags:
+      - jogadores
+      summary: Editar / activar / desactivar jogador
+      description: '**Requisitos:** RF-03.03–04'
+      parameters:
+      - *id001
+      - name: jogador_id
+        in: path
+        required: true
+        schema: *id004
+        description: Jogador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JogadorIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogador'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+    delete:
+      tags:
+      - jogadores
+      summary: Remover jogador
+      description: '**Requisitos:** RF-03.04'
+      parameters:
+      - *id001
+      - name: jogador_id
+        in: path
+        required: true
+        schema: *id004
+        description: Jogador
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+  /equipas/{equipa_id}/contactos:
+    get:
+      tags:
+      - contactos
+      summary: Listar contactos
+      description: '**Requisitos:** RF-04, TEL-09'
+      parameters:
+      - *id001
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contacto'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+    post:
+      tags:
+      - contactos
+      summary: Adicionar contacto
+      description: '**Requisitos:** RF-04.01–03'
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactoIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contacto'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '422':
+          $ref: '#/components/responses/E422'
+  /equipas/{equipa_id}/contactos/{contacto_id}:
+    patch:
+      tags:
+      - contactos
+      summary: Editar contacto / definir principal
+      description: '**Requisitos:** RF-04.03–04'
+      parameters:
+      - *id001
+      - name: contacto_id
+        in: path
+        required: true
+        schema: *id004
+        description: Contacto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactoIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contacto'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '422':
+          $ref: '#/components/responses/E422'
+    delete:
+      tags:
+      - contactos
+      summary: Remover contacto
+      description: '**Requisitos:** RF-04.04
+
+
+        409 se for o último contacto principal.'
+      parameters:
+      - *id001
+      - name: contacto_id
+        in: path
+        required: true
+        schema: *id004
+        description: Contacto
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /solicitacoes:
+    get:
+      tags:
+      - solicitacoes
+      summary: Listar solicitações da minha equipa
+      description: '**Requisitos:** TEL-13'
+      parameters:
+      - name: tipo
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - recebidas
+          - enviadas
+        description: ''
+      - name: estado
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: &id013
+          - pendente
+          - alteracao_proposta
+          - aceite
+          - recusada
+          - cancelada
+        description: ''
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaSolicitacao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+    post:
+      tags:
+      - solicitacoes
+      summary: Solicitar jogo
+      description: '**Requisitos:** RF-05.03–04, RN-19, UC08'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SolicitacaoIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitacao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '422':
+          $ref: '#/components/responses/E422'
+        '429':
+          $ref: '#/components/responses/E429'
+  /solicitacoes/{solicitacao_id}:
+    get:
+      tags:
+      - solicitacoes
+      summary: Detalhe da solicitação
+      parameters:
+      - &id005
+        name: solicitacao_id
+        in: path
+        required: true
+        schema: *id004
+        description: Solicitação
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitacao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+  /solicitacoes/{solicitacao_id}/aceitar:
+    post:
+      tags:
+      - solicitacoes
+      summary: Aceitar (cria o jogo)
+      description: '**Requisitos:** RF-05.05, RF-05.08, RN-05, UC09'
+      parameters:
+      - *id005
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /solicitacoes/{solicitacao_id}/recusar:
+    post:
+      tags:
+      - solicitacoes
+      summary: Recusar
+      description: '**Requisitos:** RF-05.05'
+      parameters:
+      - *id005
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MotivoOpcionalIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitacao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /solicitacoes/{solicitacao_id}/propostas:
+    post:
+      tags:
+      - solicitacoes
+      summary: Propor alteração de data/hora/local
+      description: '**Requisitos:** RF-05.06'
+      parameters:
+      - *id005
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropostaIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitacao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+  /solicitacoes/{solicitacao_id}/cancelar:
+    post:
+      tags:
+      - solicitacoes
+      summary: Cancelar solicitação
+      description: '**Requisitos:** RF-05.09, UC10'
+      parameters:
+      - *id005
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MotivoOpcionalIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitacao'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /jogos:
+    get:
+      tags:
+      - jogos
+      summary: Agenda da minha equipa
+      description: '**Requisitos:** RF-05.10, TEL-14'
+      parameters:
+      - name: separador
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - proximos
+          - pendentes
+          - concluidos
+          - cancelados
+        description: ''
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaJogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+  /jogos/{jogo_id}:
+    get:
+      tags:
+      - jogos
+      summary: Detalhe do jogo
+      description: '**Requisitos:** RF-06.01–02, TEL-15'
+      parameters:
+      - &id006
+        name: jogo_id
+        in: path
+        required: true
+        schema: *id004
+        description: Jogo
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '404':
+          $ref: '#/components/responses/E404'
+      security:
+      - {}
+      - bearer: []
+  /jogos/{jogo_id}/historico:
+    get:
+      tags:
+      - jogos
+      summary: Histórico de alterações do jogo
+      description: '**Requisitos:** RF-08.08, RN-12, TEL-15'
+      parameters:
+      - *id006
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegistoHistorico'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+  /jogos/{jogo_id}/cancelar:
+    post:
+      tags:
+      - jogos
+      summary: Cancelar jogo
+      description: '**Requisitos:** RF-05.09, RN-24, UC10
+
+
+        Se faltar < 24 h, conta como falta da equipa que cancela (RN-24).'
+      parameters:
+      - *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MotivoIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /jogos/{jogo_id}/comparencias/minha:
+    put:
+      tags:
+      - comparencias
+      summary: Declarar comparência da minha equipa
+      description: '**Requisitos:** RF-06.03–05, RF-07.01–03, RN-06, RN-16, RN-23, UC11'
+      parameters:
+      - *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComparenciaIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+  /jogos/{jogo_id}/comparencias/minha/concordar:
+    post:
+      tags:
+      - comparencias
+      summary: Concordar com a falta declarada pela adversária
+      description: '**Requisitos:** RN-16, UC11b'
+      parameters:
+      - *id006
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /jogos/{jogo_id}/comparencias/minha/contestar:
+    post:
+      tags:
+      - comparencias
+      summary: Contestar a falta declarada (abre caso)
+      description: '**Requisitos:** RF-07.05, RN-16, UC11b'
+      parameters:
+      - *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MotivoIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /jogos/{jogo_id}/resultados:
+    get:
+      tags:
+      - resultados
+      summary: Submissões das duas equipas
+      description: '**Requisitos:** TEL-18'
+      parameters:
+      - *id006
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Submissao'
+        '401':
+          $ref: '#/components/responses/E401'
+      security:
+      - {}
+      - bearer: []
+    post:
+      tags:
+      - resultados
+      summary: Submeter ou corrigir o resultado da minha equipa
+      description: '**Requisitos:** RF-06.06–11, RF-08.01–04, RN-08, UC12
+
+
+        Cria nova versão. Confirma se coincidir com a adversária; senão fica divergente.'
+      parameters:
+      - *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultadoIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+  /jogos/{jogo_id}/casos:
+    post:
+      tags:
+      - resultados
+      summary: Pedir análise ou reabertura ao administrador
+      description: '**Requisitos:** RF-08.07, RN-20, RN-21, UC13'
+      parameters:
+      - *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CasoIn'
+      responses:
+        '201':
+          description: Criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Caso'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+  /ranking:
+    get:
+      tags:
+      - ranking
+      summary: Ranking
+      description: '**Requisitos:** RF-09, RN-15, TEL-19, UC14'
+      parameters:
+      - name: ambito
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - geral
+          - provincia
+          - municipio
+          - bairro
+          default: geral
+        description: ''
+      - name: local_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Obrigatório se âmbito ≠ geral
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaEntradaRanking'
+        '401':
+          $ref: '#/components/responses/E401'
+        '422':
+          $ref: '#/components/responses/E422'
+      security:
+      - {}
+      - bearer: []
+  /ranking/criterios:
+    get:
+      tags:
+      - ranking
+      summary: Critérios públicos do ranking e das estrelas
+      description: '**Requisitos:** RF-09.11, RN-11'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Criterios'
+      security: []
+  /notificacoes:
+    get:
+      tags:
+      - notificacoes
+      summary: Listar notificações
+      description: '**Requisitos:** RF-10.07, TEL-20'
+      parameters:
+      - name: nao_lidas
+        in: query
+        required: false
+        schema: *id007
+        description: ''
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaNotificacao'
+        '401':
+          $ref: '#/components/responses/E401'
+  /notificacoes/{notificacao_id}/lida:
+    post:
+      tags:
+      - notificacoes
+      summary: Marcar como lida
+      parameters:
+      - name: notificacao_id
+        in: path
+        required: true
+        schema: *id004
+        description: Notificação
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '404':
+          $ref: '#/components/responses/E404'
+  /notificacoes/lidas:
+    post:
+      tags:
+      - notificacoes
+      summary: Marcar todas como lidas
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+  /dispositivos:
+    post:
+      tags:
+      - notificacoes
+      summary: Registar dispositivo para push (app)
+      description: '**Requisitos:** M8-06'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DispositivoIn'
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '422':
+          $ref: '#/components/responses/E422'
+  /dashboard:
+    get:
+      tags:
+      - dashboard
+      summary: Resumo do responsável
+      description: '**Requisitos:** TEL-05, M6-12'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+  /admin/indicadores:
+    get:
+      tags:
+      - admin
+      summary: Indicadores gerais
+      description: '**Requisitos:** RF-11.06, TEL-22'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Indicadores'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+      x-papel: admin
+  /admin/utilizadores:
+    get:
+      tags:
+      - admin
+      summary: Consultar utilizadores
+      description: '**Requisitos:** RF-11.01'
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ''
+      - name: estado
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: &id008
+          - activa
+          - suspensa
+        description: ''
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaUtilizador'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+      x-papel: admin
+  /admin/utilizadores/{utilizador_id}/estado:
+    post:
+      tags:
+      - admin
+      summary: Suspender / reactivar utilizador
+      description: '**Requisitos:** RF-11.02, RF-11.05'
+      parameters:
+      - name: utilizador_id
+        in: path
+        required: true
+        schema: *id004
+        description: Utilizador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  enum: *id008
+                motivo:
+                  type: string
+                  maxLength: 500
+              required:
+              - estado
+              - motivo
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+      x-papel: admin
+  /admin/equipas:
+    get:
+      tags:
+      - admin
+      summary: Consultar equipas
+      description: '**Requisitos:** RF-11.01'
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ''
+      - name: estado
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: *id008
+        description: ''
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaEquipaResumo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+      x-papel: admin
+  /admin/equipas/{equipa_id}/estado:
+    post:
+      tags:
+      - admin
+      summary: Suspender / reactivar equipa
+      description: '**Requisitos:** RF-11.02, RN-19'
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  enum: *id008
+                motivo:
+                  type: string
+                  maxLength: 500
+              required:
+              - estado
+              - motivo
+      responses:
+        '204':
+          description: Sem conteúdo
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+      x-papel: admin
+  /admin/casos:
+    get:
+      tags:
+      - admin
+      summary: Casos para análise
+      description: '**Requisitos:** RF-11.03, TEL-22'
+      parameters:
+      - name: estado
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: &id016
+          - aberto
+          - em_analise
+          - resolvido
+          - rejeitado
+        description: ''
+      - name: tipo
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: &id015
+          - divergencia_resultado
+          - comparencia_contestada
+          - comparencia_contraditoria
+          - reabertura_resultado
+          - jogo_fora_de_prazo
+        description: ''
+      - *id002
+      - *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaCaso'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+      x-papel: admin
+  /admin/casos/{caso_id}:
+    get:
+      tags:
+      - admin
+      summary: Detalhe do caso
+      parameters:
+      - &id009
+        name: caso_id
+        in: path
+        required: true
+        schema: *id004
+        description: Caso
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Caso'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+      x-papel: admin
+  /admin/casos/{caso_id}/resolver:
+    post:
+      tags:
+      - admin
+      summary: Resolver caso com decisão e justificação
+      description: '**Requisitos:** RF-11.04–05, RN-20, RN-21, UC17'
+      parameters:
+      - *id009
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisaoIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Caso'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+        '422':
+          $ref: '#/components/responses/E422'
+      x-papel: admin
+  /admin/casos/{caso_id}/rejeitar:
+    post:
+      tags:
+      - admin
+      summary: 'Rejeitar caso (ex.: reabertura fora de prazo)'
+      description: '**Requisitos:** RN-21'
+      parameters:
+      - *id009
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MotivoIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Caso'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+      x-papel: admin
+  /admin/jogos/{jogo_id}/marcar-realizado:
+    post:
+      tags:
+      - admin
+      summary: Marcar jogo como realizado (reabre a janela de registo)
+      description: '**Requisitos:** RF-06.13, UC22'
+      parameters:
+      - *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MotivoIn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jogo'
+        '401':
+          $ref: '#/components/responses/E401'
+        '403':
+          $ref: '#/components/responses/E403'
+        '404':
+          $ref: '#/components/responses/E404'
+        '409':
+          $ref: '#/components/responses/E409'
+      x-papel: admin
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    E400:
+      description: Pedido mal formado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E401:
+      description: Não autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E403:
+      description: Proibido (RN-13, suspensão ou papel)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E404:
+      description: Não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E409:
+      description: 'Conflito de estado (ex.: janela fechada, já respondida)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E422:
+      description: Validação ou regra de negócio violada
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E423:
+      description: Conta bloqueada temporariamente
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    E429:
+      description: Demasiados pedidos (RNF-027)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+  schemas:
+    Erro:
+      type: object
+      properties:
+        codigo:
+          type: string
+          example: regra_negocio_violada
+        mensagem:
+          type: string
+          example: Número já em uso
+        detalhes:
+          type: object
+          additionalProperties: true
+      required:
+      - codigo
+      - mensagem
+      description: Corpo padrão de erro (padrao-backend.md §4)
+    Telefone:
+      type: string
+      maxLength: 20
+      pattern: ^\+?[0-9]{9,15}$
+      example: '+244923000000'
+    PalavraPasse:
+      type: string
+      maxLength: 128
+      minLength: 8
+      format: password
+    TokenPar:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expira_em: &id012
+          type: string
+          format: date-time
+        tipo:
+          type: string
+          example: Bearer
+      required:
+      - access_token
+      - refresh_token
+      - expira_em
+    RegistoIn:
+      type: object
+      properties:
+        nome_completo:
+          type: string
+          maxLength: 120
+        telefone:
+          $ref: '#/components/schemas/Telefone'
+        palavra_passe:
+          $ref: '#/components/schemas/PalavraPasse'
+        aceita_termos:
+          type: boolean
+          enum:
+          - true
+      required:
+      - nome_completo
+      - telefone
+      - palavra_passe
+      - aceita_termos
+    LoginIn:
+      type: object
+      properties:
+        telefone:
+          $ref: '#/components/schemas/Telefone'
+        palavra_passe:
+          $ref: '#/components/schemas/PalavraPasse'
+        cliente:
+          type: string
+          enum:
+          - web
+          - mobile
+      required:
+      - telefone
+      - palavra_passe
+      - cliente
+    Sessao:
+      type: object
+      properties:
+        tokens:
+          $ref: '#/components/schemas/TokenPar'
+        utilizador:
+          $ref: '#/components/schemas/Utilizador'
+      required:
+      - tokens
+      - utilizador
+    Utilizador:
+      type: object
+      properties:
+        id: *id004
+        nome_completo:
+          type: string
+        telefone:
+          $ref: '#/components/schemas/Telefone'
+        papel:
+          type: string
+          enum:
+          - utilizador
+          - admin
+        estado:
+          type: string
+          enum: *id008
+        equipa_id:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - id
+      - nome_completo
+      - telefone
+      - papel
+      - estado
+    UtilizadorPatch:
+      type: object
+      properties:
+        nome_completo:
+          type: string
+          maxLength: 120
+    Local:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+      required:
+      - id
+      - nome
+    Localizacao:
+      type: object
+      properties:
+        bairro:
+          $ref: '#/components/schemas/Local'
+        municipio:
+          $ref: '#/components/schemas/Local'
+        provincia:
+          $ref: '#/components/schemas/Local'
+      required:
+      - bairro
+      - municipio
+      - provincia
+    Estrelas:
+      type: object
+      properties:
+        estrelas:
+          type: integer
+          minimum: 1
+          maximum: 5
+          nullable: true
+        nova: *id007
+        indice:
+          type: number
+          format: float
+      required:
+      - nova
+      description: Estrelas (null + nova=true se J < 3 — RN-14)
+    EquipaResumo:
+      type: object
+      properties:
+        id: *id004
+        nome:
+          type: string
+        emblema_url:
+          type: string
+          nullable: true
+        localizacao:
+          $ref: '#/components/schemas/Localizacao'
+        classificacao:
+          $ref: '#/components/schemas/Estrelas'
+        posicao_municipio:
+          type: integer
+          minimum: 1
+          nullable: true
+        taxa_comparencia:
+          type: number
+          format: float
+        disponivel: *id007
+      required:
+      - id
+      - nome
+      - localizacao
+      - classificacao
+      - disponivel
+    EquipaIn:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 80
+        bairro_id:
+          type: integer
+        descricao:
+          type: string
+          maxLength: 1000
+          nullable: true
+        contacto_principal:
+          $ref: '#/components/schemas/ContactoIn'
+      required:
+      - nome
+      - bairro_id
+      - contacto_principal
+    EquipaPatch:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 80
+        bairro_id:
+          type: integer
+        descricao:
+          type: string
+          maxLength: 1000
+          nullable: true
+        visibilidade_plantel:
+          type: string
+          enum: &id010
+          - publico
+          - autenticados
+          - privado
+    EquipaPerfil:
+      allOf:
+      - $ref: '#/components/schemas/EquipaResumo'
+      - type: object
+        properties:
+          descricao:
+            type: string
+            nullable: true
+          visibilidade_plantel:
+            type: string
+            enum: *id010
+          contactos:
+            type: array
+            items:
+              $ref: '#/components/schemas/Contacto'
+          plantel:
+            type: array
+            items:
+              $ref: '#/components/schemas/JogadorPublico'
+          estatisticas:
+            $ref: '#/components/schemas/Estatisticas'
+          responsavel_nome:
+            type: string
+        description: Contactos com telefone só para autenticados (RN-17); nomes do plantel conforme RN-22
+    Estatisticas:
+      type: object
+      properties:
+        jogos_confirmados:
+          type: integer
+          minimum: 0
+        vitorias:
+          type: integer
+          minimum: 0
+        empates:
+          type: integer
+          minimum: 0
+        derrotas:
+          type: integer
+          minimum: 0
+        pontos:
+          type: integer
+          minimum: 0
+        golos_marcados:
+          type: integer
+          minimum: 0
+        golos_sofridos:
+          type: integer
+          minimum: 0
+        jogos_agendados:
+          type: integer
+          minimum: 0
+        comparencias:
+          type: integer
+          minimum: 0
+        faltas_confirmadas:
+          type: integer
+          minimum: 0
+    JogadorIn:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 120
+        numero_camisola:
+          type: integer
+          minimum: 1
+          maximum: 99
+        posicao:
+          type: string
+          enum: &id011
+          - guarda_redes
+          - defesa
+          - medio
+          - avancado
+        activo: *id007
+      required:
+      - nome
+      - numero_camisola
+      - posicao
+    Jogador:
+      type: object
+      properties:
+        id: *id004
+        nome:
+          type: string
+        numero_camisola:
+          type: integer
+          minimum: 1
+          maximum: 99
+        posicao:
+          type: string
+          enum: *id011
+        activo: *id007
+      required:
+      - id
+      - nome
+      - numero_camisola
+      - posicao
+      - activo
+    JogadorPublico:
+      type: object
+      properties:
+        nome:
+          type: string
+          nullable: true
+        numero_camisola:
+          type: integer
+          minimum: 1
+          maximum: 99
+        posicao:
+          type: string
+          enum: *id011
+      required:
+      - numero_camisola
+      - posicao
+      description: nome = null quando oculto (RN-22)
+    ContactoIn:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 120
+        telefone:
+          $ref: '#/components/schemas/Telefone'
+        funcao:
+          type: string
+          maxLength: 60
+        principal: *id007
+      required:
+      - nome
+      - telefone
+      - funcao
+    Contacto:
+      type: object
+      properties:
+        id: *id004
+        nome:
+          type: string
+        telefone:
+          $ref: '#/components/schemas/Telefone'
+          nullable: true
+        funcao:
+          type: string
+        principal: *id007
+      required:
+      - id
+      - nome
+      - funcao
+      - principal
+      description: telefone = null para visitantes (RN-17)
+    SolicitacaoIn:
+      type: object
+      properties:
+        equipa_desafiada_id: *id004
+        data_hora: *id012
+        local:
+          type: string
+          maxLength: 150
+        equipa_mandante_id:
+          type: string
+          format: uuid
+          nullable: true
+        observacao:
+          type: string
+          maxLength: 500
+          nullable: true
+      required:
+      - equipa_desafiada_id
+      - data_hora
+      - local
+    PropostaIn:
+      type: object
+      properties:
+        data_hora: *id012
+        local:
+          type: string
+          maxLength: 150
+        observacao:
+          type: string
+          maxLength: 500
+          nullable: true
+      required:
+      - data_hora
+      - local
+    Proposta:
+      type: object
+      properties:
+        id: *id004
+        proposta_por_equipa_id: *id004
+        data_hora: *id012
+        local:
+          type: string
+        observacao:
+          type: string
+          nullable: true
+        criado_em: *id012
+    Solicitacao:
+      type: object
+      properties:
+        id: *id004
+        desafiante:
+          $ref: '#/components/schemas/EquipaResumo'
+        desafiada:
+          $ref: '#/components/schemas/EquipaResumo'
+        data_hora: *id012
+        local:
+          type: string
+        equipa_mandante_id:
+          type: string
+          format: uuid
+          nullable: true
+        observacao:
+          type: string
+          nullable: true
+        estado:
+          type: string
+          enum: *id013
+        aguarda_resposta_de_id:
+          type: string
+          format: uuid
+          nullable: true
+        propostas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Proposta'
+        jogo_id:
+          type: string
+          format: uuid
+          nullable: true
+        criado_em: *id012
+      required:
+      - id
+      - desafiante
+      - desafiada
+      - data_hora
+      - local
+      - estado
+    MotivoIn:
+      type: object
+      properties:
+        motivo:
+          type: string
+          maxLength: 500
+      required:
+      - motivo
+    MotivoOpcionalIn:
+      type: object
+      properties:
+        motivo:
+          type: string
+          maxLength: 500
+          nullable: true
+    Comparencia:
+      type: object
+      properties:
+        equipa_id: *id004
+        estado:
+          type: string
+          enum:
+          - nao_registada
+          - compareceu_declarado
+          - falta_declarada
+          - em_analise
+          - validada
+          - falta_confirmada
+        declarou_adversaria:
+          type: string
+          enum: &id014
+          - compareceu
+          - faltou
+          nullable: true
+        observacao:
+          type: string
+          nullable: true
+        declarado_em:
+          type: string
+          format: date-time
+          nullable: true
+        prazo_resposta_ate:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - equipa_id
+      - estado
+    ComparenciaIn:
+      type: object
+      properties:
+        compareceu: *id007
+        adversaria:
+          type: string
+          enum: *id014
+          nullable: true
+        observacao:
+          type: string
+          maxLength: 500
+          nullable: true
+      required:
+      - compareceu
+      description: adversaria obrigatória se compareceu = true
+    ResultadoIn:
+      type: object
+      properties:
+        golos_a:
+          type: integer
+          minimum: 0
+          maximum: 99
+        golos_b:
+          type: integer
+          minimum: 0
+          maximum: 99
+      required:
+      - golos_a
+      - golos_b
+    Submissao:
+      type: object
+      properties:
+        equipa_id: *id004
+        golos_a:
+          type: integer
+          minimum: 0
+        golos_b:
+          type: integer
+          minimum: 0
+        versao:
+          type: integer
+          minimum: 1
+        actual: *id007
+        criado_em: *id012
+      required:
+      - equipa_id
+      - golos_a
+      - golos_b
+      - versao
+      - actual
+    Jogo:
+      type: object
+      properties:
+        id: *id004
+        codigo:
+          type: string
+          example: GB-2026-00042
+        equipa_a:
+          $ref: '#/components/schemas/EquipaResumo'
+        equipa_b:
+          $ref: '#/components/schemas/EquipaResumo'
+        data_hora: *id012
+        local:
+          type: string
+        estado:
+          type: string
+          enum:
+          - agendado
+          - aguarda_comparencia
+          - aguarda_resultado
+          - resultado_pendente
+          - divergencia
+          - em_analise
+          - concluido
+          - cancelado
+        estado_resultado:
+          type: string
+          enum:
+          - nao_submetido
+          - aguarda_adversaria
+          - confirmado
+          - divergente
+          - em_analise
+        golos_a:
+          type: integer
+          minimum: 0
+          nullable: true
+        golos_b:
+          type: integer
+          minimum: 0
+          nullable: true
+        comparencias:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comparencia'
+        submissoes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Submissao'
+        janela_registo_aberta: *id007
+        accoes:
+          type: array
+          items:
+            type: string
+            example: submeter_resultado
+        divergente_desde:
+          type: string
+          format: date-time
+          nullable: true
+        motivo_cancelamento:
+          type: string
+          nullable: true
+      required:
+      - id
+      - codigo
+      - equipa_a
+      - equipa_b
+      - data_hora
+      - local
+      - estado
+      - estado_resultado
+      description: accoes = acções disponíveis para o utilizador actual (TEL-15)
+    RegistoHistorico:
+      type: object
+      properties:
+        accao:
+          type: string
+          enum:
+          - criar
+          - actualizar
+          - eliminar
+          - decisao_admin
+          - automatico
+        entidade:
+          type: string
+        valor_anterior:
+          type: object
+          nullable: true
+        valor_novo:
+          type: object
+          nullable: true
+        motivo:
+          type: string
+          nullable: true
+        autor:
+          type: string
+          nullable: true
+        criado_em: *id012
+    CasoIn:
+      type: object
+      properties:
+        tipo:
+          type: string
+          enum:
+          - divergencia_resultado
+          - reabertura_resultado
+        motivo:
+          type: string
+          maxLength: 1000
+      required:
+      - tipo
+      - motivo
+    Caso:
+      type: object
+      properties:
+        id: *id004
+        jogo:
+          $ref: '#/components/schemas/Jogo'
+        tipo:
+          type: string
+          enum: *id015
+        estado:
+          type: string
+          enum: *id016
+        motivo:
+          type: string
+          nullable: true
+        aberto_por_equipa_id:
+          type: string
+          format: uuid
+          nullable: true
+        decisao:
+          type: object
+          nullable: true
+        justificacao:
+          type: string
+          nullable: true
+        criado_em: *id012
+        resolvido_em:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - id
+      - jogo
+      - tipo
+      - estado
+    DecisaoIn:
+      type: object
+      properties:
+        golos_a:
+          type: integer
+          minimum: 0
+          maximum: 99
+          nullable: true
+        golos_b:
+          type: integer
+          minimum: 0
+          maximum: 99
+          nullable: true
+        comparencia:
+          type: object
+          properties:
+            equipa_id: *id004
+            compareceu: *id007
+          nullable: true
+        justificacao:
+          type: string
+          maxLength: 2000
+          minLength: 10
+      required:
+      - justificacao
+      description: Justificação obrigatória (RF-11.04)
+    EntradaRanking:
+      type: object
+      properties:
+        posicao:
+          type: integer
+          minimum: 1
+        equipa:
+          $ref: '#/components/schemas/EquipaResumo'
+        estatisticas:
+          $ref: '#/components/schemas/Estatisticas'
+        classificacao:
+          $ref: '#/components/schemas/Estrelas'
+        saldo_golos:
+          type: integer
+      required:
+      - posicao
+      - equipa
+      - estatisticas
+      - classificacao
+    Criterios:
+      type: object
+      properties:
+        texto:
+          type: string
+        pesos:
+          type: object
+          properties:
+            aproveitamento:
+              type: number
+            comparencia:
+              type: number
+        limiares_estrelas:
+          type: array
+          items:
+            type: object
+            properties:
+              estrelas:
+                type: integer
+                minimum: 1
+                maximum: 5
+              indice_minimo:
+                type: number
+        jogos_minimos:
+          type: integer
+        desempate:
+          type: array
+          items:
+            type: string
+      description: RN-11 / RF-09.11
+    Notificacao:
+      type: object
+      properties:
+        id: *id004
+        tipo:
+          type: string
+          enum:
+          - solicitacao_recebida
+          - solicitacao_aceite
+          - solicitacao_recusada
+          - alteracao_proposta
+          - jogo_cancelado
+          - lembrete_jogo
+          - comparencia_submetida
+          - falta_declarada
+          - resultado_submetido
+          - resultado_confirmado
+          - resultado_divergente
+          - caso_resolvido
+        mensagem:
+          type: string
+        jogo_id:
+          type: string
+          format: uuid
+          nullable: true
+        solicitacao_id:
+          type: string
+          format: uuid
+          nullable: true
+        lida: *id007
+        criado_em: *id012
+      required:
+      - id
+      - tipo
+      - mensagem
+      - lida
+      - criado_em
+    DispositivoIn:
+      type: object
+      properties:
+        token:
+          type: string
+          maxLength: 255
+        plataforma:
+          type: string
+          enum:
+          - android
+          - ios
+      required:
+      - token
+      - plataforma
+    Dashboard:
+      type: object
+      properties:
+        equipa:
+          $ref: '#/components/schemas/EquipaResumo'
+        proximos_jogos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Jogo'
+        solicitacoes_pendentes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Solicitacao'
+        jogos_por_confirmar:
+          type: array
+          items:
+            $ref: '#/components/schemas/Jogo'
+        total_jogadores:
+          type: integer
+          minimum: 0
+        estatisticas:
+          $ref: '#/components/schemas/Estatisticas'
+        posicao_municipio:
+          type: integer
+          minimum: 1
+          nullable: true
+        classificacao:
+          $ref: '#/components/schemas/Estrelas'
+        notificacoes_nao_lidas:
+          type: integer
+          minimum: 0
+      description: TEL-05
+    Indicadores:
+      type: object
+      properties:
+        utilizadores:
+          type: integer
+          minimum: 0
+        equipas:
+          type: integer
+          minimum: 0
+        jogadores:
+          type: integer
+          minimum: 0
+        jogos_marcados:
+          type: integer
+          minimum: 0
+        jogos_concluidos:
+          type: integer
+          minimum: 0
+        casos_abertos:
+          type: integer
+          minimum: 0
+        resultados_divergentes:
+          type: integer
+          minimum: 0
+        contas_suspensas:
+          type: integer
+          minimum: 0
+        equipas_suspensas:
+          type: integer
+          minimum: 0
+      description: TEL-22 / RF-11.06
+    PaginaEquipaResumo:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/EquipaResumo'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
+    PaginaSolicitacao:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Solicitacao'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
+    PaginaJogo:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Jogo'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
+    PaginaNotificacao:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notificacao'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
+    PaginaCaso:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Caso'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
+    PaginaUtilizador:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Utilizador'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
+    PaginaEntradaRanking:
+      type: object
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntradaRanking'
+        total:
+          type: integer
+          minimum: 0
+        pagina:
+          type: integer
+          minimum: 1
+        tamanho:
+          type: integer
+          minimum: 1
+          maximum: 50
+      required:
+      - itens
+      - total
+      - pagina
+      - tamanho
